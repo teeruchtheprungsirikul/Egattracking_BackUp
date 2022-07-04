@@ -1,12 +1,13 @@
 
 
 class SingleFactory {
-  Single mSingle;
-  Single newInstant(){
+  late Single? mSingle;
+  Single? newInstant(){
     if(mSingle == null){
       mSingle = Single();
       return mSingle;
-    }else return mSingle;
+    }else 
+      return mSingle;
   }
 }
 

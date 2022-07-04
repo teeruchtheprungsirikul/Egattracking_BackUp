@@ -2,12 +2,12 @@ class AttachmentImageUrlDao {
   String parentId;
   String url;
 
-  AttachmentImageUrlDao({this.parentId, this.url});
+  AttachmentImageUrlDao({required this.parentId, required this.url});
 
-  AttachmentImageUrlDao.fromJson(Map<String, dynamic> json) {
-    parentId = json['parent_id'];
-    url = json['url'];
-  }
+  factory AttachmentImageUrlDao.fromJson(Map<String, dynamic> json) => AttachmentImageUrlDao( 
+    parentId : json['parent_id'],
+    url : json['url'],
+  );
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

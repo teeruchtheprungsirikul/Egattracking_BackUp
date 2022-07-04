@@ -1,7 +1,7 @@
 class Topic {
   static List<String> report1 = [
     "wire", // "สายส่ง"
-    "wire_no", // "No เสาที่ส่ง"
+    "wire_no", // "No เสาร์ที่ส่ง"
     "line_percent", // "ระยะทางสะสม"
     "problem", // "ปัญหาที่สำคัญที่พบเจอ"
     "note" // "หมายเหตุ"
@@ -129,41 +129,41 @@ class Topic {
   static List<String> report13 = [
     "wire", //"สายส่ง"
     "wire_no", //"No เสาที่ส่ง"
-    "problem",  //"รายละเอียด"
+    "problem", //"รายละเอียด"
     "note" //"หมายเหตุ"
   ];
   static List<String> report14 = [
     "wire", // "สายส่ง"
-    "wire_no",// "No เสาที่ส่ง"
-    "problem",// "รายละเอียด"
-    "note"//  "หมายเหตุ"
+    "wire_no", // "No เสาที่ส่ง"
+    "problem", // "รายละเอียด"
+    "note" //  "หมายเหตุ"
   ];
   static List<String> report15 = [
-    "wire",  // "สายส่ง"
+    "wire", // "สายส่ง"
     "wire_no", // "No เสาที่ส่ง"
     "problem", // "รายละเอียด"
     "note" // "หมายเหตุ"
   ];
   static List<String> report16 = [
-    "wire",  // "สายส่ง"
+    "wire", // "สายส่ง"
     "wire_no", // "No เสาที่ส่ง"
     "problem", // "รายละเอียด"
     "note" // "หมายเหตุ"
   ];
   static List<String> report17 = [
-    "wire",  // "สายส่ง"
+    "wire", // "สายส่ง"
     "wire_no", // "No เสาที่ส่ง"
-    "detail",  // "รายละเอียด"
+    "detail", // "รายละเอียด"
     "name", // "ชื่อเจ้าของ"
     "note" // "หมายเหตุ"
   ];
   static List<String> report18 = [
-    "team",// "หน่วย",
-    "out",// "จำนวนที่ออก",
-    "close",// "จำนวนที่ปิด",
-    "noclose",// "จำนวนที่ยังไม่ปิด",
-    "sum",// "สะสมทั้งหมด",
-    "note"// "หมายเหตุ",
+    "team", // "หน่วย",
+    "out", // "จำนวนที่ออก",
+    "close", // "จำนวนที่ปิด",
+    "noclose", // "จำนวนที่ยังไม่ปิด",
+    "sum", // "สะสมทั้งหมด",
+    "note" // "หมายเหตุ",
   ];
   static List<String> report19 = [
     "team", //"หน่วย"
@@ -174,11 +174,11 @@ class Topic {
     "note" //"หมายเหตุ"
   ];
   static List<String> report20 = [
-    "namePlan",//"ชื่อแผน"
-    "activity",//"กิจกรรมที่ดำเนินการ"
-    "progress",//"% ความก้าวหน้า"
-    "problem",//"ปัญหาที่พบ"
-    "note"//"หมายเหตุ"
+    "namePlan", //"ชื่อแผน"
+    "activity", //"กิจกรรมที่ดำเนินการ"
+    "progress", //"% ความก้าวหน้า"
+    "problem", //"ปัญหาที่พบ"
+    "note" //"หมายเหตุ"
   ];
   static List<String> report21 = [
     "team", //"สังกัดหน่วย"
@@ -203,7 +203,7 @@ class Topic {
   ];
   static List<String> report24 = [
     "team", //"สังกัดหน่วย"
-    "expain"//"คำอธิบาย"
+    "expain" //"คำอธิบาย"
   ];
   static List<String> report25 = [
     "wire",
@@ -250,7 +250,7 @@ class Topic {
     "ground_system" //"ระบบ Ground (ขาด, เป็นสนิม)"
   ];
   static List<String> wireCheckDamage = [
-    "wire_check",  //"สายไฟ (เชือก ตัว หรือหางว่าว, Strand ขาด/มีรอย Arc, Vibration Damper หลุดเลื่อน)"
+    "wire_check", //"สายไฟ (เชือก ตัว หรือหางว่าว, Strand ขาด/มีรอย Arc, Vibration Damper หลุดเลื่อน)"
     "ohg_opgw" //" OHG, OPGW (เชือก ตัว หรือหางว่าว, Strand ขาด/มีรอย Arc, Vibration Damper หลุดเลื่อน)"
   ];
   static List<String> insulatorCheck = [

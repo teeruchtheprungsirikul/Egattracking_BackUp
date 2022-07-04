@@ -9,9 +9,7 @@ import 'package:egattracking/view/FormDifficultySection.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 
 import '../../main.dart';
 import '../BaseStatefulState.dart';
@@ -20,7 +18,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm3 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm3({ReportDao reportDao = null}) {
+  AddReportForm3({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 
@@ -41,7 +39,7 @@ class MyCustomAddReportForm3State extends BaseStatefulState<AddReportForm3> {
   Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  MyCustomAddReportForm3State({ReportDao reportDao = null}) {
+  MyCustomAddReportForm3State({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 

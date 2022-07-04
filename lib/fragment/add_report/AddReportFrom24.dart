@@ -11,8 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 
 import '../../main.dart';
 import 'SendReportUseCase.dart';
@@ -20,7 +19,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm24 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm24({ReportDao reportDao = null}) {
+  AddReportForm24({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 
@@ -42,7 +41,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm24State({ReportDao reportDao = null}) {
+  MyCustomAddReportForm24State({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 

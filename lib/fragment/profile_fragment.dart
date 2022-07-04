@@ -9,13 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
 
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 
 class ProfileFragment extends StatefulWidget {
   final ValueChanged<bool> logoutTriggeredAction;
 
-  const ProfileFragment({Key key, this.logoutTriggeredAction})
+  const ProfileFragment({Key? key, required this.logoutTriggeredAction})
       : super(key: key);
 
   @override
@@ -23,7 +22,7 @@ class ProfileFragment extends StatefulWidget {
 }
 
 class _ProfileFragmentState extends State<ProfileFragment> {
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   File _image;
 
   Future getImage() async {

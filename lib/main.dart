@@ -7,13 +7,18 @@ import 'package:dio/dio.dart';
 import 'package:egattracking/dao/TowerDao.dart';
 import 'package:flutter/foundation.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+} 
 
 class MyApp extends StatelessWidget {
+  
   final appTitle = 'Drawer Demo';
   static Dio dio = Dio();
-  static Data tower;
+  late Data tower;
   static SingleFactory mfactory = SingleFactory();
+
+  
 
   @override
   Widget build(BuildContext context){
@@ -23,14 +28,14 @@ class MyApp extends StatelessWidget {
     }
     dio.interceptors.add(EgatInterceptor());
 
-    return new MaterialApp(
+    return MaterialApp(
       navigatorKey: alice.getNavigatorKey(),
       title: 'NavigationDrawer Demo',
       theme: new ThemeData(
         primaryColor: Color(0xfff2b706),
         primarySwatch: Colors.blue,
       ),
-      home: new HomePage(),
+      home: HomePage(),
     );
   }
 }

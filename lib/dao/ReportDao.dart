@@ -1,14 +1,14 @@
 import 'package:egattracking/dao/ReportValueDao.dart';
 class ReportDao {
-  DateTime createdOn;
-  DateTime modifiedOn;
-  String id;
-  String towerId;
-  String type;
-  List<ReportValueDao> values;
-  List<String> images;
+  late DateTime createdOn;
+  late DateTime modifiedOn;
+  late String id;
+  late String towerId;
+  late String type;
+  late List<ReportValueDao> values;
+  late List<String> images;
 
-  ReportDao({this.id, this.towerId, this.type});
+  ReportDao({required this.id, required this.towerId, required this.type});
 
   ReportDao.fromJson(Map<String, dynamic> json) {
     createdOn = DateTime.parse(json['created_on']).toLocal();

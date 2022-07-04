@@ -1,20 +1,26 @@
+import 'dart:io';
+
+import 'package:egattracking/models/section.dart';
 import 'package:flutter/material.dart';
 
-class FromUserSection extends StatelessWidget {
-  String name, department, image;
 
-  FromUserSection(String name, String department, String image) {
-    this.name = name;
-    this.department = department;
-    this.image = image;
-  }
+
+class FromUserSection extends StatefulWidget {
+  @override
+  State<FromUserSection> createState() => _FromUserSectionState();
+}
+
+class _FromUserSectionState extends State<FromUserSection> {
+ Section _section = Section(department: '', imageRef: '', name: '');
 
   ImageProvider setupImage() {
-    if (this.image == null || this.image.isEmpty) {
+    if (_section.imageRef.isEmpty) {
       return AssetImage("people.png");
     } else
-      return NetworkImage(this.image);
+      return NetworkImage(_section.imageRef);
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +33,7 @@ class FromUserSection extends StatelessWidget {
             height: 40.0,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: setupImage()
-                )
-            ),
+                image: DecorationImage(fit: BoxFit.cover, image: setupImage())),
           ),
         ),
         Column(
@@ -45,7 +47,7 @@ class FromUserSection extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
-              child: Text(this.name,
+              child: Text(_section.name ,
                   style: DefaultTextStyle.of(context)
                       .style
                       .apply(fontSizeFactor: 1.2, color: Colors.black)),
@@ -75,12 +77,12 @@ class FromUserSection extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
               child: Text("สังกัดหน่วย",
-                  style:  TextStyle(fontSize: 14,color: Colors.black38)),
+                  style: TextStyle(fontSize: 14, color: Colors.black38)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
-              child: Text(this.department,
-                  style:  TextStyle(fontSize: 14,color: Colors.black38)),
+              child: Text(_section.department,
+                  style: TextStyle(fontSize: 14, color: Colors.black38)),
             )
           ],
         ),
@@ -88,3 +90,7 @@ class FromUserSection extends StatelessWidget {
     );
   }
 }
+
+
+
+

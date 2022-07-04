@@ -10,38 +10,41 @@ description: App tracking for Egat
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.16.1 <3.0.0"
 
 dependencies:
-  alice: ^0.0.23
-  dio: ^3.0.8
-  google_maps_flutter: ^0.5.26+2
-  http: ^0.12.0+2
-  intl: ^0.16.0
-  shared_preferences: ^0.5.6
-  loading: ^1.0.2
-  flutter_datetime_picker: ^1.3.4
-  image_picker: ^0.6.5+1
-  geolocator: ^5.3.1
-  imagebutton: ^0.0.6
-  url_launcher: ^5.5.0
-  flutter_phoenix: ^0.1.0
+  cupertino_icons: ^1.0.5
+  alice: ^0.2.5
+  dio: ^4.0.6
+  google_maps_flutter: ^2.1.8
+  http: ^0.13.4
+  intl: ^0.17.0
+  shared_preferences: ^2.0.15
+  flutter_datetime_picker: ^1.5.1
+  image_picker: ^0.8.5+3
+  geolocator: ^8.2.1
+  url_launcher: ^6.1.4
+  flutter_phoenix: ^1.0.0
+  flutter_launcher_icons: ^0.9.3
   flutter:
     sdk: flutter
+  meta: ^1.7.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-
-dev_dependencies:
-  flutter_launcher_icons: "^0.7.3"
-  flutter_test:
-    sdk: flutter
-
+  
 flutter_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
   image_path: "assets/mainLogo.png"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  fake_async: ^1.2.0
+  matcher: ^0.12.11
+  test_api: ^0.4.8
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

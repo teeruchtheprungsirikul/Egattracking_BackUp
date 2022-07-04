@@ -33,8 +33,7 @@ import 'package:egattracking/main.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import 'add_report/AddReportFrom24.dart';

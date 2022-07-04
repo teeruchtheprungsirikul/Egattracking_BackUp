@@ -1,19 +1,17 @@
 import 'package:egattracking/dao/LogInDao.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:flutter/material.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
 import 'dart:ui';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   final ValueChanged<bool> loginTriggeredAction;
-  const LoginPage({Key key, this.loginTriggeredAction}) : super(key: key);
+  const LoginPage({Key? key, required this.loginTriggeredAction}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
-  static final String KEY_IS_LOGIN = "KEY_IS_LOGIN";
+  static final String keylogin = "KEY_IS_LOGIN";
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -55,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Center(
           child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -118,10 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                                   width: 40,
                                   height: 40,
                                   child: Center(
-                                    child: Loading(
-                                      indicator: BallSpinFadeLoaderIndicator(),
-                                      size: 40.0,
-                                      color: Colors.yellow,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation(Colors.yellow),
                                     ),
                                   ),
                                 ));
@@ -138,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                                               title: Text("Error"),
                                               content: Text("can not login"),
                                               actions: <Widget>[
-                                                RaisedButton(
+                                                ElevatedButton(
                                                   onPressed: () => {
                                                     Navigator.of(context)
                                                         .pop(true)

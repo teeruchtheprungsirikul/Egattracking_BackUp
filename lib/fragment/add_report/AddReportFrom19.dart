@@ -8,9 +8,7 @@ import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 
 import '../../main.dart';
 import '../BaseStatefulState.dart';
@@ -19,7 +17,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm19 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm19({ReportDao reportDao = null}) {
+  AddReportForm19({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 
@@ -38,7 +36,7 @@ class MyCustomAddReportForm19State extends BaseStatefulState<AddReportForm19> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm19State({ReportDao reportDao = null}) {
+  MyCustomAddReportForm19State({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 

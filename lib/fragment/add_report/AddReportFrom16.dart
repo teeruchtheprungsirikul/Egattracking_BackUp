@@ -6,8 +6,7 @@ import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
-import 'package:loading/loading.dart';
+
 
 import '../../main.dart';
 import '../BaseStatefulState.dart';
@@ -16,7 +15,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm16 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm16({ReportDao reportDao = null}) {
+  AddReportForm16({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 
@@ -35,7 +34,7 @@ class MyCustomAddReportForm16State extends BaseStatefulState<AddReportForm16> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm16State({ReportDao reportDao = null}) {
+  MyCustomAddReportForm16State({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
 
@@ -315,12 +314,7 @@ class MyCustomAddReportForm16State extends BaseStatefulState<AddReportForm16> {
                                               width: 40,
                                               height: 40,
                                               child: Center(
-                                                child: Loading(
-                                                  indicator:
-                                                      BallSpinFadeLoaderIndicator(),
-                                                  size: 40.0,
-                                                  color: Colors.yellow,
-                                                ),
+                                                child: CircularProgressIndicator()
                                               ),
                                             ));
                                     SendReportUseCase.serReport(oj, (response) {

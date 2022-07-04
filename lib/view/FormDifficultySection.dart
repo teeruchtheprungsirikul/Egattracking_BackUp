@@ -2,13 +2,18 @@ import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:flutter/material.dart';
 
-class FormDifficultySection extends StatelessWidget {
-  ReportDao reportDao;
+class FormDifficultySection extends StatefulWidget {
+  late ReportDao? reportDao;
 
   FormDifficultySection(ReportDao mReportDao) {
     reportDao = mReportDao;
   }
 
+  @override
+  State<FormDifficultySection> createState() => _FormDifficultySectionState();
+}
+
+class _FormDifficultySectionState extends State<FormDifficultySection> {
   List<String> labelAndHintTree = [
     "ป่าไม้สูง",
     "ต้นไม้สูง",
@@ -21,6 +26,7 @@ class FormDifficultySection extends StatelessWidget {
     "ต้นไม้อันตราย",
     "กอไผ่อันตราย"
   ];
+
   List<String> labelCheckboxWarning = [
     "อาคาร สิ่งปลูกสร้าง ต้นไม้",
     "ขุดบ่อใกล้โคนเสา",
@@ -29,21 +35,23 @@ class FormDifficultySection extends StatelessWidget {
     "ป้ายประกาศชำรุดลบเลือน",
     "หลักเขตชำรุด สูญหาย"
   ];
+
   List<String> labelCheckboxUrgent = ["เร่งด่วน"];
+
   List<String> poleCheck = [
     "โคนเสา (ดินถม, น้ำเซาะ, คอนกรีดแตกร้าว)",
     "เหล็กประกอบเสา (หาย, เป็นสนิม, บิดงอ, สีโคนเสาหลุดลอก, หลายเลขเสาลบเลือน, ป้ายลบเลือน)",
     "Bolt & Nut (ขา Stub หาย, ยึด Ground หาย, ยึด Member หาย)",
     "ระบบ Ground (ขาด, เป็นสนิม)"
   ];
+
   List<String> wireCheck = [
     "สายไฟ (เชือก ตัว หรือหางว่าว, Strand ขาด/มีรอย Arc, Vibration Damper หลุดเลื่อน)",
     " OHG, OPGW (เชือก ตัว หรือหางว่าว, Strand ขาด/มีรอย Arc, Vibration Damper หลุดเลื่อน)"
   ];
-  List<String> insulator = [
-    "Flash",
-    "แตกบิ่น"
-  ];
+
+  List<String> insulator = ["Flash", "แตกบิ่น"];
+
   List<String> lineCrossCheck = [
     "ถนน",
     "สายส่ง 22 kV",
@@ -51,18 +59,24 @@ class FormDifficultySection extends StatelessWidget {
     "สายส่ง 230 kV",
     "สายเคเบิลสื่อสาร"
   ];
+
   List<String> hardware = [
     "วงจร 1 (ลูกถ้วยเฟส A B C, SUSP. CLAMP, COMP. SLEEVE, ARMOR ROD, DAMPER)",
     "วงจร 2 (ลูกถ้วยเฟส A B C, SUSP. CLAMP, COMP. SLEEVE, ARMOR ROD, DAMPER)"
   ];
-  List<TextEditingController> mController;
-  List<TextEditingController> mControllerCrossCheck;
+
+  late List<TextEditingController> mController;
+
+  late List<TextEditingController> mControllerCrossCheck;
+
   List<bool> checkBoxValue = List.generate(6, (index) {
     return false;
   });
+
   List<bool> checkBoxUrgentValue = List.generate(1, (index) {
     return false;
   });
+
   bool isUseCrossCheck = false;
 
   @override
@@ -101,7 +115,7 @@ class FormDifficultySection extends StatelessWidget {
                 (labelAndHintTree.length +
                     poleCheck.length +
                     wireCheck.length +
-                    insulator.length )]));
+                    insulator.length)]));
       }
     });
 
@@ -244,7 +258,7 @@ class FormDifficultySection extends StatelessWidget {
   }
 
   List<Map> getValueForPost() {
-    List<Map> result = List();
+    List<Map> result = [];
     int index = 0;
     for (var i = 0; i < Topic.warningBreak.length; i++) {
       result.add({
@@ -287,11 +301,11 @@ class FormDifficultySection extends StatelessWidget {
   }
 
   String initialText(String key) {
-    if (reportDao == null)
+    if (widget.reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return widget.reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
