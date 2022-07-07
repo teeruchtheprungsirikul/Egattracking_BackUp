@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:egattracking/home_page.dart';
 import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
-import 'package:egattracking/dao/TowerDao.dart';
 import 'package:flutter/foundation.dart';
+import 'dao/DataTower.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     if(!kReleaseMode){
       dio.interceptors.add(alice.getDioInterceptor());
     }
-    dio.interceptors.add(EgatInterceptor());
+    dio.interceptors.add(EgatInterceptor(dio: dio));
 
     return MaterialApp(
       navigatorKey: alice.getNavigatorKey(),

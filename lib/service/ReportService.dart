@@ -15,7 +15,7 @@ import '../main.dart';
 class ReportService {
   static Future<PostReportDao> sendReport(List<Map> data, String type, String towerNo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString(UserService.KEY_USER_ID);
+    var userId = prefs.getString(UserService.key_user_id);
     var body = {
       "type": type,
       "tower_id": towerNo,
@@ -26,7 +26,7 @@ class ReportService {
         options: Options(headers: {
           "Content-Type": "application/json",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}"
+          "Bearer ${prefs.getString(UserService.key_access_token)}"
         }),
         data: jsonEncode(body));
     return PostReportDao.fromJson(response.data);
@@ -35,7 +35,7 @@ class ReportService {
   static Future<PostReportDao> editReport(List<Map> data, String type,
       String towerNo, String reportId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString(UserService.KEY_USER_ID);
+    var userId = prefs.getString(UserService.key_user_id);
     var body = {
       "type": type,
       "tower_id": towerNo,
@@ -46,7 +46,7 @@ class ReportService {
         options: Options(headers: {
           "Content-Type": "application/json",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}"
+          "Bearer ${prefs.getString(UserService.key_access_token)}"
         }),
         data: jsonEncode(body));
     return PostReportDao.fromJson(response.data);
@@ -55,21 +55,21 @@ class ReportService {
   static Future<List<ReportDao>> getReport() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String reportUrl;
-    if (prefs.getString(UserService.KEY_USER_ROLE) == "admin") {
+    if (prefs.getString(UserService.key_user_role) == "admin") {
       reportUrl = Repository.report;
     } else {
       reportUrl =
-          Repository.getReport(prefs.getString(UserService.KEY_USER_ID));
+          Repository.getReport(prefs.getString(UserService.key_user_id).toString());
     }
     var response = await MyApp.dio.get(
         reportUrl,
         options: Options(headers: {
           "Content-Type": "application/json; charset=utf-8",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}"
+          "Bearer ${prefs.getString(UserService.key_access_token)}"
         }));
     if (response.data is String) {
-      return List<ReportDao>();
+       return <ReportDao>[];
     } else {
       var mapList = response.data as List;
       var result = mapList.map((item) => ReportDao.fromJson(item)).toList();
@@ -80,7 +80,7 @@ class ReportService {
           map[s.id] = images.map((t) => t.url).toList();
       }
       var result2 = result.map((tmp) {
-          tmp.images = map[tmp.id];
+          tmp.images = map[tmp.id]!;
         return tmp;
       }).toList();
 
@@ -91,11 +91,11 @@ class ReportService {
     }
   }
 
-  static Future<List<UploadImagesDao>> uploadImages(List<File> files) async {
+  static Future<List<UploadImagesDao>> uploadImages(List<File?> files) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userId = prefs.getString(UserService.KEY_USER_ID);
-      List<UploadImagesDao> uploadImageResults = List();
+      var userId = prefs.getString(UserService.key_user_id);
+      List<UploadImagesDao> uploadImageResults = [];
       for (var file in files) {
         if (file != null) {
           String fileName = file.path
@@ -103,21 +103,21 @@ class ReportService {
               .last;
           var multipart = await MultipartFile.fromFile(file.path, filename: fileName);
           FormData formData = FormData.fromMap({
-            "image": await MultipartFile.fromFile(file.path, filename: fileName,contentType: multipart.contentType.change(type: "image",subtype: fileName.split('.').last))
+            "image": await MultipartFile.fromFile(file.path, filename: fileName,contentType: multipart.contentType?.change(type: "image",subtype: fileName.split('.').last))
           });
           var response = await MyApp.dio.put(
-              Repository.uploadImage(userId), data: formData, options:
+              Repository.uploadImage(userId!), data: formData, options:
           Options(headers: {
             "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryyrV7KO0BoCBuDbTL",
             "Authorization": "Bearer ${prefs.getString(
-                UserService.KEY_ACCESS_TOKEN)}"
+                UserService.key_access_token)}"
           }));
-          if (response.statusCode < 300) uploadImageResults.add(UploadImagesDao.fromJson(response.data));
+          if (response.statusCode! < 300) uploadImageResults.add(UploadImagesDao.fromJson(response.data));
         }
       }
       return uploadImageResults;
     }catch(e){
-      return List();
+      return [];
     }
   }
 }

@@ -11,14 +11,15 @@ import 'UserService.dart';
 
 class AttachmentService {
   static Future<List<AttachmentCreateDao>> createAttachment(
-      List<File> files, String reportId) async {
+      List<File?> files, String reportId) async {
     print("call attachment");
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userId = prefs.getString(UserService.KEY_USER_ID);
-      List<AttachmentCreateDao> uploadImageResults = List();
+      // ignore: unused_local_variable
+      var userId = prefs.getString(UserService.key_user_id);
+      List<AttachmentCreateDao> uploadImageResults = [];
       print("before for");
-      for (var file in files) {
+      for ( var file in files) {
         print("in for each with file = $file");
         if (file != null) {
           String fileName = file.path.split('/').last;
@@ -27,7 +28,7 @@ class AttachmentService {
           FormData formData = FormData.fromMap({
             "file": await MultipartFile.fromFile(file.path,
                 filename: fileName,
-                contentType: multipart.contentType
+                contentType: multipart.contentType!
                     .change(type: "image", subtype: fileName.split('.').last)),
             "parentid": reportId,
             "type": "report"
@@ -36,16 +37,16 @@ class AttachmentService {
               data: formData,
               options: Options(headers: {
                 "Authorization":
-                    "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}"
+                    "Bearer ${prefs.getString(UserService.key_access_token)}"
               }));
-          if (response.statusCode < 300)
+          if (response.statusCode! < 300)
             uploadImageResults.add(AttachmentCreateDao.fromJson(response.data));
         }
       }
       return uploadImageResults;
     } catch (e) {
       print("error : $e");
-      return List();
+      return [];
     }
   }
 
@@ -53,14 +54,15 @@ class AttachmentService {
       String parentId) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userId = prefs.getString(UserService.KEY_USER_ID);
+      // ignore: unused_local_variable
+      var userId = prefs.getString(UserService.key_user_id);
       var response = await MyApp.dio.get(Repository.attachmentById(parentId),
           options: Options(headers: {
             "Authorization":
-                "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}"
+                "Bearer ${prefs.getString(UserService.key_access_token)}"
           }));
       if(response is String){
-        return List();
+        return [];
       }else{
         var mapList = response.data as List;
         return mapList.map((tmp){
@@ -68,7 +70,7 @@ class AttachmentService {
         }).toList();
       }
     } catch (e) {
-      return List();
+      return [];
     }
   }
 }

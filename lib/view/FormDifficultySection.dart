@@ -300,7 +300,7 @@ class _FormDifficultySectionState extends State<FormDifficultySection> {
     return result;
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (widget.reportDao == null)
       return "";
     else {

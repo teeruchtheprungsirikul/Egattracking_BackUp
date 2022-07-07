@@ -1,19 +1,19 @@
 class LoginDao {
-  String? accessToken;
-  String? tokenType;
-  int? expiresIn;
-  String? refreshToken;
-  String? uid;
-  String? role;
+  String accessToken;
+  String tokenType;
+  int expiresIn;
+  String refreshToken;
+  String uid;
+  String role;
 
   LoginDao(
       {
-        this.accessToken,
-        this.tokenType,
-        this.expiresIn,
-        this.refreshToken,
-        this.uid,
-        this.role
+        required this.accessToken,
+        required this.tokenType,
+        required this.expiresIn,
+        required this.refreshToken,
+        required this.uid,
+        required this.role
         
       }
   );

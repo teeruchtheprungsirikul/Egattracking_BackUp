@@ -9,29 +9,34 @@ import '../Repository.dart';
 import '../UserService.dart';
 
 class EgatInterceptor extends InterceptorsWrapper {
+  late final Dio dio;
+  late String csrfToken;
+  EgatInterceptor({required this.dio});
   @override
-  Future onError(DioError error) async {
-    switch (error.response.statusCode) {
-      case 401:
-        {
-          try {
-            await refreshToken();
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            RequestOptions options = error.response.request;
-            options.headers["Authorization"] =
-                "Bearer ${prefs.getString(UserService.KEY_ACCESS_TOKEN)}";
-            return MyApp.dio.request(options.path, options: options);
-          } catch (e) {
-            UserService.logout();
-            print(e);
-            return super.onError(error);
-          }
-        }
-        break;
-      default:
-        {
-          return super.onError(error);
-        }
+  Future<dynamic> onError(
+      DioError error, ErrorInterceptorHandler handler) async {
+    if (error.response?.statusCode == 401 ||
+        error.response?.statusCode == 403) {
+      try {
+        await refreshToken();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        RequestOptions options = error.response!.requestOptions;
+        options.headers["Authorization"] =
+            "Bearer ${prefs.getString(UserService.key_access_token)}";
+        final opts = new Options(
+            method: error.requestOptions.method,
+            headers: error.requestOptions.headers);
+        return MyApp.dio.request(options.path,
+            options: opts,
+            data: error.requestOptions.data,
+            queryParameters: error.requestOptions.queryParameters);
+      } catch (e) {
+        UserService.logout();
+        print(e);
+        return super.onError(error, handler);
+      }
+    } else {
+      return super.onError(error, handler);
     }
   }
 
@@ -39,19 +44,19 @@ class EgatInterceptor extends InterceptorsWrapper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final body = jsonEncode({
       "grant_type": "refresh_token",
-      "username": prefs.getString(UserService.KEY_USER_NAME),
-      "refresh_token": prefs.getString(UserService.KEY_REFRESH_TOKEN)
+      "username": prefs.getString(UserService.key_user_name),
+      "refresh_token": prefs.getString(UserService.key_refresh_token)
     });
     var response = await Dio().post(Repository.login,
         options: Options(headers: {'Content-Type': 'application/json'}),
         data: body);
     RefreshTokenDao refreshTokenDao = RefreshTokenDao.fromJson(response.data);
 
-    if (response.statusCode < 300) {
+    if (response.statusCode! < 300) {
       prefs.setString(
-          UserService.KEY_ACCESS_TOKEN, refreshTokenDao.accessToken);
+          UserService.key_access_token, refreshTokenDao.accessToken);
     } else {
-      prefs.setString(UserService.KEY_ACCESS_TOKEN, "");
+      prefs.setString(UserService.key_access_token, "");
     }
     return refreshTokenDao;
   }
