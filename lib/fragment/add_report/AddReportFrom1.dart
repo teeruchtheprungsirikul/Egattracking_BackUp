@@ -47,7 +47,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
 
   List<String> topic = Topic.report1;
   List<TextEditingController> mEditingController;
-  Single mSingle = MyApp.mfactory.newInstant();
+  Single? mSingle = MyApp.mfactory.newInstant();
 
   @override
   void initState() {

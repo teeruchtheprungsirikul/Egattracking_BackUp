@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     if(!kReleaseMode){
       dio.interceptors.add(alice.getDioInterceptor());
     }
-    dio.interceptors.add(EgatInterceptor(dio: dio));
+    dio.interceptors.add(EgatInterceptor());
 
     return MaterialApp(
       navigatorKey: alice.getNavigatorKey(),

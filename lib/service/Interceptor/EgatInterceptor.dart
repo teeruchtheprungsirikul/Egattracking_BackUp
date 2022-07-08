@@ -9,9 +9,7 @@ import '../Repository.dart';
 import '../UserService.dart';
 
 class EgatInterceptor extends InterceptorsWrapper {
-  late final Dio dio;
-  late String csrfToken;
-  EgatInterceptor({required this.dio});
+  
   @override
   Future<dynamic> onError(
       DioError error, ErrorInterceptorHandler handler) async {

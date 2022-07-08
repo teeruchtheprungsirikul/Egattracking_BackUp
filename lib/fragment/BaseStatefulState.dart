@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   List<File> file = List(2);
-  ReportDao reportDao;
+  late ReportDao reportDao;
   String urgent = "ไม่เร่งด่วน";
 
   Widget imageSection() {
@@ -54,14 +54,14 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   }
 
   Future getImage(index) async {
-    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       file[index] = File(image.path);
     });
   }
 
   void sentAttechment(PostReportDao response){
-    if (response.code < 300) {
+    if (response.code! < 300) {
       AttachmentService.createAttachment(
             file, response.reportId)
           .then((Attacresponse) {
@@ -122,7 +122,7 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   }
 
   void sendDone(BuildContext context, PostReportDao response) {
-    mShowDialog(response.code > 300,context);
+    mShowDialog(response.code! > 300,context);
   }
 
   void mShowDialog(bool isError,BuildContext mContext,) {
@@ -135,7 +135,7 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
           content: new Text(isError? "เกิดข้อผิดพลาดกรุณาลองอีกครั้ง" : "สำเร็จ"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
+            new TextButton(
               child: new Text("ปิด"),
               onPressed: () {
                 Navigator.of(context).popUntil((route) => route.isFirst);

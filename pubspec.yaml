@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   alice: ^0.2.5
   dio: ^4.0.0
+  fresh: ^0.4.0
+  fresh_dio: ^0.3.0
   google_maps_flutter: ^2.1.8
   http: ^0.13.4
   intl: ^0.17.0
