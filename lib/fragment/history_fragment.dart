@@ -29,11 +29,16 @@ import 'package:egattracking/service/ReportService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
+import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:core';
 
 class HistoryFragment extends StatefulWidget {
+
+  HistoryFragment({Key? key}):super(key: key);
+
   @override
   _HistoryFragmentState createState() => _HistoryFragmentState();
 }
@@ -48,8 +53,8 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
   String getOrDefault(ReportDao reports,String  key){
     String a;
     try{
-      a = reports.values.firstWhere((it) => it.key == key).value;
-    }catch( Exception ){
+      a = reports.values.firstWhere((it) => it.key == key).value!;
+    }catch( exception ){
       a = "empty";
     }
     return a;
@@ -58,14 +63,14 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
   String getWire(ReportDao reports,int index){
     String a;
     try{
-      a = reports.values.firstWhere((it) => it.key == "wire_detail").value;
+      a = reports.values.firstWhere((it) => it.key == "wire_detail").value!;
       a = a.split(":")[index];
       return a;
     }catch(e){
       return "";
     }
   }
-  Future<List<ReportDao>> _reports;
+  late Future<List<ReportDao>> _reports;
 
   Widget renderReports(List<ReportDao> reports) {
     return ListView.builder(
@@ -88,7 +93,16 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                         leading: InkWell(
                           child: ImageIcon(AssetImage("line.png")),
                           onTap: (){
-                            launch("https://line.me/R/");
+                              // launchUrl(
+                              // Uri.parse("https://line.me/R/")
+                              // {LaunchMode mode = LaunchMode.platformDefault,
+                              // WebViewConfiguration webViewConfiguration = const WebViewConfiguration(),
+                              // String? webOnlyWindowName}
+                              // );
+                              launchUrl(Uri.parse("https://line.me/R/"),
+                             mode: LaunchMode.platformDefault,
+                  
+                              );
                           },
                         ),
                         title: RichText(
@@ -253,11 +267,11 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
     'Team C',
     'Team D'
   ];
-  String _yearDropDownValue;
+  late String yearDropDownValue;
 
-  String _monthDropDownValue;
+  late String monthDropDownValue;
 
-  String _teamDropDownValue;
+  late String teamDropDownValue;
 
   //:TODO create type filter for admin
 
@@ -277,7 +291,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                 future: _reports,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return renderReports(snapshot.data);
+                    return renderReports(snapshot.data!);
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }

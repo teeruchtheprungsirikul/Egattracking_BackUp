@@ -12,10 +12,11 @@ void main() {
 } 
 
 class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
   
   final appTitle = 'Drawer Demo';
   static Dio dio = Dio();
-  late Data tower;
+  static late Data tower;
   static SingleFactory mfactory = SingleFactory();
 
   

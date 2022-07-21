@@ -6,18 +6,22 @@ import 'package:intl/intl.dart';
 import 'dart:ui';
 
 class EditProfileFragment extends StatefulWidget {
+  EditProfileFragment({Key? key}) :super(key: key);
+
   @override
   _EditProfileFragmentState createState() => _EditProfileFragmentState();
 }
 
 class _EditProfileFragmentState extends State<EditProfileFragment> {
-  File _image;
+  late File? _image;
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  getImage() async {
+    final imageFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(imageFile!.path);
 
     setState(() {
-      _image = image;
+      _image = File(imageFile.path);
     });
   }
 
@@ -34,58 +38,59 @@ class _EditProfileFragmentState extends State<EditProfileFragment> {
           backgroundColor: Colors.white,
         ),
         body: Container(
-            height: 250,
-            child: Stack(
-                children: <Widget>[
-                  Center(
-                    child: Padding(
+          height: 250,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                  child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                        Container(
-                        width: 190.0,
-                        height: 190.0,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(190.0),
-                            child: setImage(),
-                    ),
-                  )
-                ]))),
-    Padding(
-    padding: const EdgeInsets.fromLTRB(0, 200, 10, 0),
-    child: Row(
-    crossAxisAlignment: CrossAxisAlignment.end,
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: <Widget>[
-    IconButton(
-    icon: Icon(
-    Icons.camera_alt,
-    color: Colors.black,
-    ),
-    onPressed: getImage ),
-    ],
-    ),
-    )
-    ],
-    )
-    ,
-    )
-    );
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 190.0,
+                              height: 190.0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(190.0),
+                                child: setImage(),
+                              ),
+                            )
+                          ]))),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 200, 10, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    IconButton(
+                        icon: Icon(
+                          Icons.camera_alt,
+                          color: Colors.black,
+                        ),
+                        onPressed: getImage),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
-  Widget setImage () {
-    if(_image==null) { return Image.network(
-      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg",
-      fit: BoxFit.fitHeight,
-      height: 190.0,
-      width: 190.0,
-    );}else
-      return Image.file(
-        _image,
+
+  Widget setImage() {
+    if (_image != null) {
+      return Image.network(
+        "https://ibb.co/v1wP2x5",
         fit: BoxFit.fitHeight,
         height: 190.0,
         width: 190.0,
       );
+    } else
+        return Image.file(
+          _image!,
+          fit: BoxFit.fitHeight,
+          height: 190.0,
+          width: 190.0,
+        );
   }
- }
+}

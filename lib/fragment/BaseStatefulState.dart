@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:io';
 
 import 'package:egattracking/dao/PostReportDao.dart';
@@ -7,7 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
-  List<File> file = List(2);
+  //var file = List<File>.filled();
+  // int length = 2;
+  List<File> file = factory as List<File>;
+  filled(length, fill, {bool growable = false});
+  //List<int> file = List<int>.filled(2, 0);
   late ReportDao reportDao;
   String urgent = "ไม่เร่งด่วน";
 
@@ -24,65 +29,62 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
               padding: const EdgeInsets.all(8),
               child: Material(
                   child: InkWell(
-                    onTap: () {
-                      getImage(0);
-                    },
-                    child: Container(
-                      child: ClipRRect(
-                        borderRadius:
-                        BorderRadius.circular(10.0),
-                        child: prepareImage(file[0], 0),
-                      ),
-                    ),
-                  ))),
+                onTap: () {
+                  getImage(0);
+                },
+                child: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: prepareImage(file[0], 0),
+                  ),
+                ),
+              ))),
           Container(
               padding: const EdgeInsets.all(8),
               child: Material(
                   child: InkWell(
-                    onTap: () {
-                      getImage(1);
-                    },
-                    child: Container(
-                      child: ClipRRect(
-                        borderRadius:
-                        BorderRadius.circular(10.0),
-                        child: prepareImage(file[1], 1),
-                      ),
-                    ),
-                  ))),
+                onTap: () {
+                  getImage(1);
+                },
+                child: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: prepareImage(file[1], 1),
+                  ),
+                ),
+              ))),
         ]);
   }
 
   Future getImage(index) async {
-    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(image!.path);
     setState(() {
       file[index] = File(image.path);
     });
   }
 
-  void sentAttechment(PostReportDao response){
+  void sentAttechment(PostReportDao response) {
     if (response.code! < 300) {
-      AttachmentService.createAttachment(
-            file, response.reportId)
-          .then((Attacresponse) {
+      AttachmentService.createAttachment(file, response.reportId!)
+          .then((attacresponse) {
         sendDone(context, response);
       });
     } else
       sendDone(context, response);
   }
 
-  Widget dropdownUrgent(){
+  Widget dropdownUrgent() {
     return Padding(
-        padding:
-        EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
         child: Container(
           width: double.infinity,
           child: DropdownButton<String>(
             value: urgent,
             elevation: 16,
-            onChanged: (String newValue) {
+            onChanged: (String? newValue) {
               setState(() {
-                urgent = newValue;
+                urgent = newValue!;
               });
             },
             items: <String>[
@@ -91,16 +93,14 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
               'เร่งด่วนระดับ 2',
               'เร่งด่วนระดับ 3',
               'เร่งด่วนระดับ 4'
-            ].map<DropdownMenuItem<String>>(
-                    (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-        )
-    );
+        ));
   }
 
   Widget prepareImage(file, int position) {
@@ -122,17 +122,21 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   }
 
   void sendDone(BuildContext context, PostReportDao response) {
-    mShowDialog(response.code! > 300,context);
+    mShowDialog(response.code! > 300, context);
   }
 
-  void mShowDialog(bool isError,BuildContext mContext,) {
+  void mShowDialog(
+    bool isError,
+    BuildContext mContext,
+  ) {
     showDialog(
       context: mContext,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("ผลบันทึกรายงาน"),
-          content: new Text(isError? "เกิดข้อผิดพลาดกรุณาลองอีกครั้ง" : "สำเร็จ"),
+          content:
+              new Text(isError ? "เกิดข้อผิดพลาดกรุณาลองอีกครั้ง" : "สำเร็จ"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new TextButton(
@@ -146,5 +150,4 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
       },
     );
   }
-
 }

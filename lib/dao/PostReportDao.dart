@@ -6,7 +6,7 @@ class PostReportDao {
    String? message;
    String? reportId;
 
-  PostReportDao({required this.code, required this.message});
+  PostReportDao({required this.code, required this.message, required this.reportId});
 
   PostReportDao.fromJson(Map<String, dynamic> json) {
     try{

@@ -1,4 +1,5 @@
 import 'dart:io' show Platform, exit;
+import 'dart:ui';
 
 import 'package:egattracking/Single.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -36,13 +37,15 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import '../dao/DataTower.dart';
 import 'add_report/AddReportFrom24.dart';
 import 'add_report/AddReportFrom25.dart';
 
 class ReportFragment extends StatefulWidget {
   final ValueChanged<bool> logoutTriggeredAction;
 
-  const ReportFragment({Key key, this.logoutTriggeredAction}) : super(key: key);
+  const ReportFragment({Key? key, required this.logoutTriggeredAction})
+      : super(key: key);
 
   @override
   MyCustomFormState createState() {
@@ -59,19 +62,19 @@ class MyCustomFormState extends State<ReportFragment> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  Future<ProfileDao> _profile;
-  Single _single = MyApp.mfactory.newInstant();
+  late Future<ProfileDao> _profile;
+  Single? _single = MyApp.mfactory.newInstant();
 
   @override
   void initState() {
     _profile = UserService.getProfile();
     UserService.refreshToken();
-    _single.nameTower = "โปรดเลือกเสา";
+    _single!.nameTower = "โปรดเลือกเสา";
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext? context) {
     // Build a Form widget using the _formKey created above.
     var menu = [
       "งานบำรุงรักษาเชิงป้องกัน (PM)",
@@ -104,7 +107,6 @@ class MyCustomFormState extends State<ReportFragment> {
       "แบบรายงานผลการตรวจสายขัดข้อง"
     ];
     return Scaffold(
-      appBar: null,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -125,10 +127,10 @@ class MyCustomFormState extends State<ReportFragment> {
                     ),
                     FutureBuilder(
                         future: _profile,
-                        builder: (BuildContext mContext,
+                        builder: (BuildContext? mContext,
                             AsyncSnapshot<ProfileDao> snapshot) {
                           if (snapshot.hasData) {
-                            ProfileDao data = snapshot.data;
+                            ProfileDao data = snapshot.data!;
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(
                                   20.0, 8.0, 0.0, 0.0),
@@ -140,17 +142,24 @@ class MyCustomFormState extends State<ReportFragment> {
                             UserService.logout();
                             if (mContext != null) {
                               Phoenix.rebirth(mContext);
-                            } else if(context != null) {
+                            } else if (context != null) {
                               Phoenix.rebirth(context);
                             } else {
                               exit(0);
                             }
                           }
                           return Center(
-                            child: Loading(
-                                indicator: BallSpinFadeLoaderIndicator(),
-                                size: 40.0,
-                                color: Colors.yellow),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                CircularProgressIndicator(
+                                  backgroundColor: Colors.blueGrey,
+                                  valueColor: AlwaysStoppedAnimation(
+                                      Colors.amberAccent),
+                                  strokeWidth: 8.0,
+                                ),
+                              ],
+                            ),
                           );
                         })
                   ],
@@ -166,7 +175,7 @@ class MyCustomFormState extends State<ReportFragment> {
                               icon: Icon(Icons.person),
                               onPressed: () {
                                 Navigator.push(
-                                    context,
+                                    context!,
                                     MaterialPageRoute(
                                         builder: (context) => ProfileFragment(
                                             logoutTriggeredAction:
@@ -176,7 +185,7 @@ class MyCustomFormState extends State<ReportFragment> {
                               icon: Icon(Icons.history),
                               onPressed: () {
                                 Navigator.push(
-                                    context,
+                                    context!,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             HistoryFragment()));
@@ -186,12 +195,12 @@ class MyCustomFormState extends State<ReportFragment> {
                               onPressed: () {
                                 if (Platform.isIOS) {
                                   try {
-                                    launch(
-                                        "https://support.apple.com/th-th/HT208924");
+                                    launchUrl(Uri.parse(
+                                        "https://support.apple.com/th-th/HT208924"));
                                   } catch (e) {}
                                 } else {
-                                  launch(
-                                      "https://play.google.com/store/apps/details?id=kr.sira.measure");
+                                  launchUrl(Uri.parse(
+                                      "https://play.google.com/store/apps/details?id=kr.sira.measure"));
                                 }
                               })
                         ],
@@ -202,13 +211,16 @@ class MyCustomFormState extends State<ReportFragment> {
             Divider(color: Colors.grey),
             SizedBox(
               width: double.infinity,
-              child: OutlineButton(
-                padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                    textStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    )),
                 onPressed: goToMap,
-                textColor: Colors.black,
-                borderSide: BorderSide(
-                    color: Colors.grey, width: 1.0, style: BorderStyle.solid),
-                child: Text(_single.nameTower),
+                child: Text(_single!.nameTower),
               ),
             ),
             Expanded(
@@ -226,12 +238,13 @@ class MyCustomFormState extends State<ReportFragment> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
                           child: Text(menu[position],
-                              style: TextStyle(fontSize: 18.0,backgroundColor: Colors.amberAccent)),
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  backgroundColor: Colors.amberAccent)),
                         ),
                         Divider(color: Colors.grey)
                       ],
                     );
-                    break;
                   default:
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +252,7 @@ class MyCustomFormState extends State<ReportFragment> {
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            if (_single.nameTower == "โปรดเลือกเสา")
+                            if (_single!.nameTower == "โปรดเลือกเสา")
                               goToMap();
                             else {
                               switch (position) {
@@ -429,15 +442,16 @@ class MyCustomFormState extends State<ReportFragment> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-      onPressed: (){
-        launch("https://www.egat.co.th/index.php?option=com_content&view=article&id=80&Itemid=116");
-      },
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Container(
-          child: Image.asset("mainLogo.png"),
+        onPressed: () {
+          launchUrl(Uri.parse(
+              "https://www.egat.co.th/index.php?option=com_content&view=article&id=80&Itemid=116"));
+        },
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Container(
+            child: Image.asset("mainLogo.png"),
+          ),
         ),
-      ),
         backgroundColor: Colors.white,
       ),
     );
@@ -448,7 +462,7 @@ class MyCustomFormState extends State<ReportFragment> {
         context, MaterialPageRoute(builder: (context) => MapFragment()));
     MyApp.tower = result;
     setState(() {
-      _single.nameTower = result.name.replaceAll("_", "-") + " " + result.type;
+      _single!.nameTower = result.name.replaceAll("_", "-") + " " + result.type;
     });
   }
 }

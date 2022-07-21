@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
 
-
+import 'dart:core';
 
 class ProfileFragment extends StatefulWidget {
   final ValueChanged<bool> logoutTriggeredAction;
@@ -23,36 +23,40 @@ class ProfileFragment extends StatefulWidget {
 
 class _ProfileFragmentState extends State<ProfileFragment> {
   late Future<ProfileDao> _profile;
-  File _image;
+  late File? _image;
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if(image!=null){
+  getImage() async {
+    final File? image =
+        (await ImagePicker().pickImage(source: ImageSource.gallery)) as File;
+
+    if (image != null) {
       showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context ) => Container(
-            width: 40,
-            height: 40,
-            child: Center(
-              child: Loading(
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: 40.0,
-                color: Colors.yellow,
-              ),
-            ),
-          )
-      );
-      UserService.uploadImage(image).then((response){
+          builder: (context) => Container(
+              width: 40,
+              height: 40,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(
+                      backgroundColor: Colors.blueGrey,
+                      valueColor: AlwaysStoppedAnimation(Colors.amberAccent),
+                      strokeWidth: 8.0,
+                    ),
+                  ],
+                ),
+              )));
+      UserService.uploadImage(image).then((response) {
         setState(() {
           _image = image;
-          Navigator.pop(context,true);
+          Navigator.pop(context, true);
         });
       });
-    }else{
-      Navigator.pop(context,true);
+    } else {
+      Navigator.pop(context, true);
     }
-
   }
 
   @override
@@ -65,14 +69,14 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-          title: Text("Profile"),
-          backgroundColor: Colors.white,
-          ),
+        title: Text("Profile"),
+        backgroundColor: Colors.white,
+      ),
       body: FutureBuilder<ProfileDao>(
         future: _profile,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return renderProfile(snapshot.data);
+            return renderProfile(snapshot.data!);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -81,14 +85,18 @@ class _ProfileFragmentState extends State<ProfileFragment> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(0.0),
-        child: FlatButton(
+        child: TextButton(
           onPressed: () {
             UserService.logout();
             widget.logoutTriggeredAction(true);
             Navigator.pop(context);
           },
-          color: Colors.white,
-          textColor: Colors.red,
+          style: TextButton.styleFrom(
+            primary: Colors.red,
+            backgroundColor: Colors.white
+          ),
+          // color: Colors.white,
+          // textColor: Colors.red,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -126,18 +134,18 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     width: 40.0,
                     height: 40.0,
                     decoration: BoxDecoration(
-                        color: Colors.amberAccent,
-                        shape: BoxShape.circle
-                    )
-                ),
+                        color: Colors.amberAccent, shape: BoxShape.circle)),
               ),
               Positioned(
                 bottom: 10,
                 right: 10,
                 child: IconButton(
-                    icon: Icon(Icons.camera_alt,color: Colors.grey,),
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey,
+                  ),
                   onPressed: getImage,
-                  color:  Colors.amberAccent,
+                  color: Colors.amberAccent,
                 ),
               )
             ],
@@ -195,19 +203,20 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     );
   }
 
-  Widget setImage (String image) {
-    if(_image==null) {
-      if(image == null || image.isEmpty){
+  Widget setImage(String image) {
+    if (_image == null) {
+      if (image.isEmpty) {
         return Image.asset("people.png");
       }
       return Image.network(
-      image,
-      fit: BoxFit.fitHeight,
-      height: 190.0,
-      width: 190.0,
-    );}else
+        image,
+        fit: BoxFit.fitHeight,
+        height: 190.0,
+        width: 190.0,
+      );
+    } else
       return Image.file(
-        _image,
+        _image!,
         fit: BoxFit.fitHeight,
         height: 190.0,
         width: 190.0,

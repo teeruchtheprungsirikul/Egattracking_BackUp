@@ -9,12 +9,10 @@ import '../Repository.dart';
 import '../UserService.dart';
 
 class EgatInterceptor extends InterceptorsWrapper {
-  
   @override
   Future<dynamic> onError(
       DioError error, ErrorInterceptorHandler handler) async {
-    if (error.response?.statusCode == 401 ||
-        error.response?.statusCode == 403) {
+    if (error.response?.statusCode == 401 ) {
       try {
         await refreshToken();
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,10 +22,7 @@ class EgatInterceptor extends InterceptorsWrapper {
         final opts = new Options(
             method: error.requestOptions.method,
             headers: error.requestOptions.headers);
-        return MyApp.dio.request(options.path,
-            options: opts,
-            data: error.requestOptions.data,
-            queryParameters: error.requestOptions.queryParameters);
+        return MyApp.dio.request(options.path,options: opts);
       } catch (e) {
         UserService.logout();
         print(e);
