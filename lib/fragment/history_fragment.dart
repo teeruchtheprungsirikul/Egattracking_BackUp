@@ -100,7 +100,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                               // String? webOnlyWindowName}
                               // );
                               launchUrl(Uri.parse("https://line.me/R/"),
-                             mode: LaunchMode.platformDefault,
+                              mode: LaunchMode.platformDefault,
                   
                               );
                           },

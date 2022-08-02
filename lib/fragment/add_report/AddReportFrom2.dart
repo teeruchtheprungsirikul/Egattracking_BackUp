@@ -9,6 +9,7 @@ import 'package:egattracking/view/FormDifficultySection.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:freezed/builder.dart';
 
 
 import '../../main.dart';
@@ -29,7 +30,7 @@ class AddReportForm2 extends StatefulWidget {
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
+abstract class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
 
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
@@ -37,21 +38,21 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm2State({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
+    this.reportDao = reportDao!;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
 
-  List<String> topic = Topic.report2;
-  List<TextEditingController> mEditingController;
-  FormDifficultySection formDifficultySection;
+  late List<String> topic = Topic.report2;
+  late List<TextEditingController> mEditingController;
+  late FormDifficultySection formDifficultySection;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController = List<int>.filled(topic.length,0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -65,12 +66,12 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
       formDifficultySection.checkBoxValue[i] = initialText(Topic.warningBreak[i]) == "true";
     }
     formDifficultySection.checkBoxUrgentValue[0] = initialText(Topic.urgent[0]) == "true";
-    urgent = initialText(Topic.urgent[0]);
+    urgent = initialText(Topic.urgent[0])!;
     if(urgent.isEmpty) urgent = "ไม่เร่งด่วน";
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
@@ -141,11 +142,11 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                               AsyncSnapshot<ProfileDao> snapshot) {
 
                             if(snapshot.hasData){
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(
                                   data.firstname,
                                   data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data.imageUrl!);
                             }
                             return Center(child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 40.0,color: Colors.yellow),);
                           }
@@ -167,7 +168,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -191,7 +192,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -216,7 +217,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -240,7 +241,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -339,8 +340,8 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
                                     var towerNo =reportDao != null ? reportDao.towerId : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
@@ -420,10 +421,16 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
       value: formDifficultySection.checkBoxUrgentValue[index],
       onChanged: (isCheck){
         setState(() {
-          formDifficultySection.checkBoxUrgentValue[index] = isCheck;
+          formDifficultySection.checkBoxUrgentValue[index] = isCheck!;
         });
       },
       controlAffinity: ListTileControlAffinity.leading,
     );
   }
+
+ 
+
+  
+
+  
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:egattracking/Single.dart';
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/PostReportDao.dart';
@@ -40,19 +42,19 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
     this.reportDao = reportDao!;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  FormDifficultySection formDifficultySection;
+  late FormDifficultySection formDifficultySection;
 
   List<String> topic = Topic.report1;
-  List<TextEditingController> mEditingController;
-  Single mSingle = MyApp.mfactory.newInstant();
+  late List<TextEditingController> mEditingController;
+  Single? mSingle = MyApp.mfactory.newInstant();
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController = List<int>.filled(topic.length,0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -66,12 +68,12 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
       formDifficultySection.checkBoxValue[i] = initialText(Topic.warningBreak[i]) == "true";
     }
     formDifficultySection.checkBoxUrgentValue[0] = initialText(Topic.urgent[0]) == "true";
-    urgent = initialText(Topic.urgent[0]);
+    urgent = initialText(Topic.urgent[0])!;
     if(urgent.isEmpty) urgent = "ไม่เร่งด่วน";
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (this.reportDao == null)
       return "";
     else {
@@ -142,11 +144,11 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                               AsyncSnapshot<ProfileDao> snapshot) {
 
                             if(snapshot.hasData){
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(
                                   data.firstname,
                                   data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data!.imageUrl);
                             }
                             return Center(child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 40.0,color: Colors.yellow),);
                           }
@@ -168,7 +170,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -192,7 +194,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -217,7 +219,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -241,7 +243,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -334,14 +336,18 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.amberAccent,
+                                  textStyle: TextStyle(color: Colors.white)
+                                ),
                                 textColor: Colors.white,
                                 color: Colors.amberAccent,
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
                                     var towerNo =this.reportDao != null ? this.reportDao.towerId : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
@@ -408,7 +414,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
       value: formDifficultySection.checkBoxValue[index],
       onChanged: (isCheck){
         setState(() {
-          formDifficultySection.checkBoxValue[index] = isCheck;
+          formDifficultySection.checkBoxValue[index] = isCheck!;
         });
       },
       controlAffinity: ListTileControlAffinity.leading,
@@ -420,7 +426,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
       value: formDifficultySection.checkBoxUrgentValue[index],
       onChanged: (isCheck){
         setState(() {
-          formDifficultySection.checkBoxUrgentValue[index] = isCheck;
+          formDifficultySection.checkBoxUrgentValue[index] = isCheck!;
         });
       },
       controlAffinity: ListTileControlAffinity.leading,
@@ -432,4 +438,8 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
     // TODO: implement filled
     throw UnimplementedError();
   }
+
+  
+
+ 
 }
