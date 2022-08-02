@@ -16,7 +16,7 @@ class TowerService {
         options: Options(headers: {
           "Content-Type": "application/json; charset=utf-8",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.key_access_token)}"
+          "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }));
     return TowerDao.fromJson(response.data);
   }
@@ -28,7 +28,7 @@ class TowerService {
         options: Options(headers: {
           "Content-Type": "application/json; charset=utf-8",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.key_access_token)}"
+          "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }));
     return TowerDao.fromJson(response.data);
   }

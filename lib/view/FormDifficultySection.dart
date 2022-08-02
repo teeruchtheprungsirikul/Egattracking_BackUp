@@ -9,6 +9,8 @@ class FormDifficultySection extends StatefulWidget {
     reportDao = mReportDao;
   }
 
+  
+
   @override
   State<FormDifficultySection> createState() => _FormDifficultySectionState();
 }

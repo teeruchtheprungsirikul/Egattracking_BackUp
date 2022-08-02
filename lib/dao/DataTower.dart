@@ -24,7 +24,7 @@ class Data {
       );
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-     createdOn : json['created_on'],
+    createdOn : json['created_on'],
     deleted : json['deleted'],
     id : json['id'],
     latitude : json['latitude'],

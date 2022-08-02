@@ -18,7 +18,7 @@ class EgatInterceptor extends InterceptorsWrapper {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         RequestOptions options = error.response!.requestOptions;
         options.headers["Authorization"] =
-            "Bearer ${prefs.getString(UserService.key_access_token)}";
+            "Bearer ${prefs.getString(UserService.keyaccesstoken)}";
         final opts = new Options(
             method: error.requestOptions.method,
             headers: error.requestOptions.headers);
@@ -37,8 +37,8 @@ class EgatInterceptor extends InterceptorsWrapper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final body = jsonEncode({
       "grant_type": "refresh_token",
-      "username": prefs.getString(UserService.key_user_name),
-      "refresh_token": prefs.getString(UserService.key_refresh_token)
+      "username": prefs.getString(UserService.keyusername),
+      "refresh_token": prefs.getString(UserService.keyrefreshtoken)
     });
     var response = await Dio().post(Repository.login,
         options: Options(headers: {'Content-Type': 'application/json'}),
@@ -47,9 +47,9 @@ class EgatInterceptor extends InterceptorsWrapper {
 
     if (response.statusCode! < 300) {
       prefs.setString(
-          UserService.key_access_token, refreshTokenDao.accessToken);
+          UserService.keyaccesstoken, refreshTokenDao.accessToken);
     } else {
-      prefs.setString(UserService.key_access_token, "");
+      prefs.setString(UserService.keyaccesstoken, "");
     }
     return refreshTokenDao;
   }

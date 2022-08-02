@@ -17,7 +17,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm1 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm1({ReportDao? reportDao }) {
+  AddReportForm1({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
@@ -36,8 +36,8 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm1State({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
+  MyCustomAddReportForm1State({ReportDao? reportDao}) {
+    this.reportDao = reportDao!;
   }
 
   Future<ProfileDao> _profile;
@@ -47,7 +47,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
 
   List<String> topic = Topic.report1;
   List<TextEditingController> mEditingController;
-  Single? mSingle = MyApp.mfactory.newInstant();
+  Single mSingle = MyApp.mfactory.newInstant();
 
   @override
   void initState() {
@@ -425,5 +425,11 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
       },
       controlAffinity: ListTileControlAffinity.leading,
     );
+  }
+
+  @override
+  filled(length, fill, {bool growable = false}) {
+    // TODO: implement filled
+    throw UnimplementedError();
   }
 }

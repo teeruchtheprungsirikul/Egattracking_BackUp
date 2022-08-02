@@ -374,7 +374,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                                           width: 40,
                                           height: 40,
                                           child: Center(
-                                            child: Loading(
+                                            child: CircularProgressIndicator(
                                               indicator: BallSpinFadeLoaderIndicator(),
                                               size: 40.0,
                                               color: Colors.yellow,

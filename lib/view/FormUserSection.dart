@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 
 class FromUserSection extends StatefulWidget {
+  FromUserSection(String firstname, String team, String imageUrl);
+
   @override
   State<FromUserSection> createState() => _FromUserSectionState();
 }

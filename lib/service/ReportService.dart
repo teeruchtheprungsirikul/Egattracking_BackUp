@@ -15,7 +15,7 @@ import '../main.dart';
 class ReportService {
   static Future<PostReportDao> sendReport(List<Map> data, String type, String towerNo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString(UserService.key_user_id);
+    var userId = prefs.getString(UserService.keyuserid);
     var body = {
       "type": type,
       "tower_id": towerNo,
@@ -26,7 +26,7 @@ class ReportService {
         options: Options(headers: {
           "Content-Type": "application/json",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.key_access_token)}"
+          "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }),
         data: jsonEncode(body));
     return PostReportDao.fromJson(response.data);
@@ -35,7 +35,7 @@ class ReportService {
   static Future<PostReportDao> editReport(List<Map> data, String type,
       String towerNo, String reportId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString(UserService.key_user_id);
+    var userId = prefs.getString(UserService.keyuserid);
     var body = {
       "type": type,
       "tower_id": towerNo,
@@ -46,7 +46,7 @@ class ReportService {
         options: Options(headers: {
           "Content-Type": "application/json",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.key_access_token)}"
+          "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }),
         data: jsonEncode(body));
     return PostReportDao.fromJson(response.data);
@@ -55,18 +55,18 @@ class ReportService {
   static Future<List<ReportDao>> getReport() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String reportUrl;
-    if (prefs.getString(UserService.key_user_role) == "admin") {
+    if (prefs.getString(UserService.keyuserrole) == "admin") {
       reportUrl = Repository.report;
     } else {
       reportUrl =
-          Repository.getReport(prefs.getString(UserService.key_user_id).toString());
+          Repository.getReport(prefs.getString(UserService.keyuserid).toString());
     }
     var response = await MyApp.dio.get(
         reportUrl,
         options: Options(headers: {
           "Content-Type": "application/json; charset=utf-8",
           "Authorization":
-          "Bearer ${prefs.getString(UserService.key_access_token)}"
+          "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }));
     if (response.data is String) {
        return <ReportDao>[];
@@ -94,7 +94,7 @@ class ReportService {
   static Future<List<UploadImagesDao>> uploadImages(List<File?> files) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userId = prefs.getString(UserService.key_user_id);
+      var userId = prefs.getString(UserService.keyuserid);
       List<UploadImagesDao> uploadImageResults = [];
       for (var file in files) {
         if (file != null) {
@@ -110,7 +110,7 @@ class ReportService {
           Options(headers: {
             "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundaryyrV7KO0BoCBuDbTL",
             "Authorization": "Bearer ${prefs.getString(
-                UserService.key_access_token)}"
+                UserService.keyaccesstoken)}"
           }));
           if (response.statusCode! < 300) uploadImageResults.add(UploadImagesDao.fromJson(response.data));
         }

@@ -2,6 +2,7 @@ import 'dart:io' show Platform, exit;
 import 'dart:ui';
 
 import 'package:egattracking/Single.dart';
+import 'package:egattracking/dao/DataTower.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/TowerDao.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom1.dart';
@@ -37,7 +38,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import '../dao/DataTower.dart';
+
 import 'add_report/AddReportFrom24.dart';
 import 'add_report/AddReportFrom25.dart';
 

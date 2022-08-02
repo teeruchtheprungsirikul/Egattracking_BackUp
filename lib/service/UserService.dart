@@ -14,16 +14,16 @@ import 'package:egattracking/service/Repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
-  // ignore: non_constant_identifier_names
-  static final key_access_token = "key_access_token";
-  // ignore: non_constant_identifier_names
-  static final key_refresh_token = "key_refresh_token";
-  // ignore: non_constant_identifier_names
-  static final key_user_name = "key_user_name";
-  // ignore: non_constant_identifier_names
-  static final key_user_id = "key_user_id";
-  // ignore: non_constant_identifier_names
-  static final key_user_role = "key_user_role";
+  
+  static final keyaccesstoken = "KEY_ACCESS_TOKEN";
+ 
+  static final keyrefreshtoken = "KEY_REFRESH_TOKEN";
+  
+  static final keyusername = "KEY_USER_NAME";
+  
+  static final keyuserid = "KEY_USER_ID";
+  
+  static final keyuserrole = "KEY_USER_ROLE";
 
   static Future<LoginDao> login(String username, String password) async {
     final body = jsonEncode(
@@ -36,11 +36,11 @@ class UserService {
     prefs.setBool(LoginPage.keylogin, response.statusCode! < 300);
     print(response.statusCode);
     if (response.statusCode! < 300) {
-      prefs.setString(key_access_token, loginDao.accessToken);
-      prefs.setString(key_refresh_token, loginDao.refreshToken);
-      prefs.setString(key_user_name, username);
-      prefs.setString(key_user_id, loginDao.uid);
-      prefs.setString(key_user_role, loginDao.role);
+      prefs.setString(keyaccesstoken, loginDao.accessToken);
+      prefs.setString(keyrefreshtoken, loginDao.refreshToken);
+      prefs.setString(keyusername, username);
+      prefs.setString(keyuserid, loginDao.uid);
+      prefs.setString(keyuserrole, loginDao.role);
     }
     return loginDao;
   }
@@ -49,8 +49,8 @@ class UserService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final body = jsonEncode({
       "grant_type": "refresh_token",
-      "username": prefs.getString(key_user_name),
-      "refresh_token": prefs.getString(key_refresh_token)
+      "username": prefs.getString(keyusername),
+      "refresh_token": prefs.getString(keyrefreshtoken)
     });
 
     var response = await MyApp.dio.post(Repository.login,
@@ -59,21 +59,21 @@ class UserService {
     RefreshTokenDao refreshTokenDao = RefreshTokenDao.fromJson(response.data);
 
     if (response.statusCode! < 300) {
-      prefs.setString(key_access_token, refreshTokenDao.accessToken);
+      prefs.setString(keyaccesstoken, refreshTokenDao.accessToken);
     }
     return refreshTokenDao;
   }
   static Future<ProfileDao> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await MyApp.dio.get(
-        Repository.profile(prefs.getString('key_user_id')!),
+        Repository.profile(prefs.getString('keyuserid')!),
         options: Options(headers: {
-          "Authorization": "Bearer ${prefs.getString(key_access_token)}"
+          "Authorization": "Bearer ${prefs.getString(keyaccesstoken)}"
         }));
     if(response.statusCode! > 300){
       var refresh = await refreshToken();
       var responseNew = await MyApp.dio.get(
-          Repository.profile(prefs.getString(key_user_id)!),
+          Repository.profile(prefs.getString(keyuserid)!),
           options: Options(headers: {
             "Authorization": "Bearer ${refresh.accessToken}"
           }));
@@ -84,20 +84,20 @@ class UserService {
   static void logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(LoginPage.keylogin, false);
-    prefs.setString(key_access_token, "");
-    prefs.setString(key_refresh_token, "");
-    prefs.setString(key_user_name, "");
-    prefs.setString(key_user_id, "");
+    prefs.setString(keyaccesstoken, "");
+    prefs.setString(keyrefreshtoken, "");
+    prefs.setString(keyusername, "");
+    prefs.setString(keyuserid, "");
   }
 
   static void test401() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key_access_token, "");
+    prefs.setString(keyaccesstoken, "");
   }
 
   static Future<UploadImagesDao> uploadImage(File file) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString(UserService.key_user_id);
+    var userId = prefs.getString(UserService.keyuserid);
     String fileName = file.path
         .split('/')
         .last;
@@ -113,7 +113,7 @@ class UserService {
         Repository.uploadImage(userId!), data: formData, options:
     Options(headers: {
       "Authorization": "Bearer ${prefs.getString(
-          UserService.key_access_token)}"
+          UserService.keyaccesstoken)}"
     }));
 
     return UploadImagesDao.fromJson(response.data);
