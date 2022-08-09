@@ -9,7 +9,6 @@ import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../main.dart';
 import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
@@ -21,7 +20,6 @@ class AddReportForm7 extends StatefulWidget {
     this.reportDao = reportDao;
   }
 
-
   @override
   MyCustomAddReportForm7State createState() {
     return MyCustomAddReportForm7State(reportDao: reportDao);
@@ -31,44 +29,42 @@ class AddReportForm7 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
-
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm7State({ReportDao? reportDao }) {
+  MyCustomAddReportForm7State({ReportDao? reportDao}) {
     this.reportDao = reportDao!;
   }
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
 
   List<String> topic = Topic.report7;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController =
+        List.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.type;
     }
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values
-            .firstWhere((it) => it.key == key)
-            .value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -84,8 +80,8 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
 
     return SafeArea(
         child: Scaffold(
-          body: Builder(builder: (context) =>
-              Form(
+      body: Builder(
+          builder: (context) => Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Column(
@@ -99,24 +95,27 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                               Navigator.pop(context);
                             },
                           ),
-                          Expanded(child: Text("งานจ้างเหมาแรงงานท้องถิ่นตรวจ และบำรุงรักษาสายส่ง",
-                            style: TextStyle(fontSize: 18, color: Colors.black),overflow: TextOverflow.ellipsis,))
+                          Expanded(
+                              child: Text(
+                            "งานจ้างเหมาแรงงานท้องถิ่นตรวจ และบำรุงรักษาสายส่ง",
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          ))
                         ],
                       ),
                       Row(
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                20.0, 8.0, 0.0, 0.0),
+                            padding:
+                                const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
                             child: Text("ในหมวด",
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.black38)),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                5.0, 8.0, 0.0, 0.0),
-                            child: Text(
-                                "งานบำรุงรักษาเชิงป้องกัน (PM)",
+                            padding:
+                                const EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 0.0),
+                            child: Text("งานบำรุงรักษาเชิงป้องกัน (PM)",
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black)),
                           ),
@@ -124,20 +123,20 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                       ),
                       FutureBuilder(
                           future: _profile,
-                        builder: (BuildContext context, AsyncSnapshot<ProfileDao> snapshot) {
-
-                            if(snapshot.hasData){
-                              ProfileDao data = snapshot.data;
-                              return FromUserSection(
-                                  data.firstname,
-                                  data.team,
-                                  snapshot.data.imageUrl);
+                          builder: (BuildContext context,
+                              AsyncSnapshot<ProfileDao> snapshot) {
+                            if (snapshot.hasData) {
+                              ProfileDao data = snapshot.data!;
+                              return FromUserSection(data.firstname, data.team,
+                                  snapshot.data!.imageUrl);
                             }
-                            return Center(child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 40.0,color: Colors.yellow),);
-                        }
-                      ),
-                      Padding(padding: EdgeInsets.fromLTRB(
-                          20.0, 20.0, 20.0, 0.0),
+                            return Center(
+                                child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.yellow),
+                            ));
+                          }),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: mEditingController[0],
                           maxLines: 1,
@@ -146,43 +145,40 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                              ),
+                              borderSide: BorderSide(),
                             ),
                             hintText: "กรอกสายส่ง",
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
                           },
                         ),
                       ),
-                Padding(padding: EdgeInsets.fromLTRB(
-                    20.0, 20.0, 20.0, 0.0),
-                  child: TextFormField(
-                    controller: mEditingController[1],
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      labelText: "รายละเอียดงานจ้าง",
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide(
-                        ),
-                      ),
-                      hintText: "รายละเอียด",
-                      //fillColor: Colors.green
-                    ),
-                    validator: (val) {
-                      return null;
-                    },
-                  )
-                ),
-                      Padding(padding: EdgeInsets.fromLTRB(
-                          20.0, 20.0, 0.0, 0.0),
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                          child: TextFormField(
+                            controller: mEditingController[1],
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              labelText: "รายละเอียดงานจ้าง",
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(),
+                              ),
+                              hintText: "รายละเอียด",
+                              //fillColor: Colors.green
+                            ),
+                            validator: (val) {
+                              return null;
+                            },
+                          )),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
                         child: TextFormField(
                           controller: mEditingController[2],
                           maxLines: 1,
@@ -192,47 +188,45 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                              ),
+                              borderSide: BorderSide(),
                             ),
                             hintText: "กรอกขอบเขตงาน",
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
                           },
                         ),
                       ),
-                  Padding(padding: EdgeInsets.fromLTRB(
-                        20.0, 20.0, 0.0, 0.0),
-                      child: TextFormField(
-                        controller: mEditingController[3],
-                        maxLines: 1,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "ราคา(บาท)",
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
+                        child: TextFormField(
+                          controller: mEditingController[3],
+                          maxLines: 1,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "ราคา(บาท)",
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(),
                             ),
+                            hintText: "กรอกราคา",
+                            //fillColor: Colors.green
                           ),
-                          hintText: "กรอกราคา",
-                          //fillColor: Colors.green
+                          validator: (val) {
+                            if (val!.length == 0)
+                              return "โปรดกรอกข้อความ";
+                            else
+                              return null;
+                          },
                         ),
-                        validator: (val) {
-                          if (val.length == 0)
-                            return "โปรดกรอกข้อความ";
-                          else
-                            return null;
-                        },
                       ),
-                    ),
-                      Padding(padding: EdgeInsets.fromLTRB(
-                          20.0, 20.0, 20.0, 0.0),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: mEditingController[4],
                           maxLines: 1,
@@ -242,22 +236,21 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                              ),
+                              borderSide: BorderSide(),
                             ),
                             hintText: "กรอก % ความก้าวหน้า",
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
                           },
                         ),
                       ),
-                      Padding(padding: EdgeInsets.fromLTRB(
-                          20.0, 20.0, 20.0, 0.0),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: mEditingController[5],
                           maxLines: 5,
@@ -266,22 +259,21 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                              ),
+                              borderSide: BorderSide(),
                             ),
                             hintText: "กรอกรายละเอียด",
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
                           },
                         ),
                       ),
-                      Padding(padding: EdgeInsets.fromLTRB(
-                          20.0, 20.0, 20.0, 0.0),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: mEditingController[6],
                           maxLines: 5,
@@ -290,8 +282,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                              ),
+                              borderSide: BorderSide(),
                             ),
                             hintText: "กรอกรายละเอียด",
                             //fillColor: Colors.green
@@ -302,81 +293,82 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                         ),
                       ),
                       imageSection(),
-                      Divider(color: Colors.grey,),
+                      Divider(
+                        color: Colors.grey,
+                      ),
                       Row(
                         children: <Widget>[
                           Flexible(
                               child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text("วันที่บันทึก",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black38)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text(today,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black)),
-                                    )
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text("วันที่บันทึก",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black38)),
                                 ),
-                              )
-                          ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text(today,
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                )
+                              ],
+                            ),
+                          )),
                           Flexible(
                               child: Container(
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text("เวลา",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black38)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text(time,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black)),
-                                    )
-                                  ],
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text("เวลา",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black38)),
                                 ),
-                              )
-                          ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text(time,
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                )
+                              ],
+                            ),
+                          )),
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
-                                textColor: Colors.white,
-                                color: Colors.amberAccent,
+                              child: ElevatedButton(
+                                child: Text('บันทึก'),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.amberAccent,
+                                  textStyle: TextStyle(color: Colors.white),
+                                ),
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
-                                    var towerNo =reportDao != null ? reportDao.towerId : MyApp.tower.id;
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
+                                    var towerNo = reportDao != null
+                                        ? reportDao!.towerId
+                                        : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
-                                      "value": "งานจ้างเหมาแรงงานท้องถิ่นตรวจ และบำรุงรักษาสายส่ง"
+                                      "value":
+                                          "งานจ้างเหมาแรงงานท้องถิ่นตรวจ และบำรุงรักษาสายส่ง"
                                     });
                                     for (var i = 0; i < topic.length; i++) {
-
                                       body.add({
                                         "key": topic[i],
                                         "type": "string",
@@ -385,43 +377,35 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body,
-                                        "7",
-                                        towerNo,
-                                        reportDao
-                                    );
+                                        body, "7", towerNo, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,
-                                        builder: (context ) => Container(
-                                          width: 40,
-                                          height: 40,
-                                          child: Center(
-                                            child: Loading(
-                                              indicator: BallSpinFadeLoaderIndicator(),
-                                              size: 40.0,
-                                              color: Colors.yellow,
-                                            ),
-                                          ),
-                                        )
-                                    );
-                                    SendReportUseCase.serReport(oj,(response){
+                                        builder: (context) => Container(
+                                              width: 40,
+                                              height: 40,
+                                              child: Center(
+                                                child: CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          Colors.yellow),
+                                                ),
+                                              ),
+                                            ));
+                                    SendReportUseCase.serReport(oj, (response) {
                                       sentAttechment(response);
                                     });
                                   }
                                 },
-                                child: Text('บันทึก'),
                               ),
                             ),
                           )
                         ],
                       ),
-
                     ],
                   ),
                 ),
               )),
-        )
-    );
+    ));
   }
 }

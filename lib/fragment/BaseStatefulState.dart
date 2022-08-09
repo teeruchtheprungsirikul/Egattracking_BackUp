@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
-  //var file = List<File>.filled();
-  // int length = 2;
-  List<File> file = factory as List<File>;
-  filled(length, fill, {bool growable = false});
+  // List<File> file = factory as List<File>;
+  // filled(length, fill, {bool growable = false});
+
+  List<File> file = List<int>.filled(2,0).cast<File>();
   //List<int> file = List<int>.filled(2, 0);
-  late ReportDao reportDao;
+  late ReportDao? reportDao;
   String urgent = "ไม่เร่งด่วน";
 
   Widget imageSection() {
@@ -53,6 +53,20 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
                   ),
                 ),
               ))),
+              Container(
+              padding: const EdgeInsets.all(8),
+              child: Material(
+                  child: InkWell(
+                onTap: () {
+                  getImage(2);
+                },
+                child: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: prepareImage(file[2], 2),
+                  ),
+                ),
+              )))
         ]);
   }
 
@@ -106,7 +120,7 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao.images[position];
+        var url = reportDao!.images[position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(
@@ -134,13 +148,12 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("ผลบันทึกรายงาน"),
-          content:
-              new Text(isError ? "เกิดข้อผิดพลาดกรุณาลองอีกครั้ง" : "สำเร็จ"),
+          title: Text("ผลบันทึกรายงาน"),
+          content: Text(isError ? "เกิดข้อผิดพลาดกรุณาลองอีกครั้ง" : "สำเร็จ"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new TextButton(
-              child: new Text("ปิด"),
+            TextButton(
+              child: Text("ปิด"),
               onPressed: () {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },

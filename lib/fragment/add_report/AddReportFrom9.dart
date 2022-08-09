@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../main.dart';
 import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
@@ -17,7 +16,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm9 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm9({ReportDao? reportDao }) {
+  AddReportForm9({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
@@ -30,32 +29,29 @@ class AddReportForm9 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
-
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm9State({ReportDao? reportDao }) {
+  MyCustomAddReportForm9State({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
 
   String _timeChoose = "";
 
   List<String> topic = Topic.report9;
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values
-            .firstWhere((it) => it.key == key)
-            .value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -65,12 +61,13 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController =
+        List.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.name;
       mEditingController[1].text = MyApp.tower.type;
     }
@@ -102,8 +99,12 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                               Navigator.pop(context);
                             },
                           ),
-                          Expanded(child: Text("งานตรวจสอบค่า Safety Clearance และ Ground Clearance ของสายส่ง",
-                            style: TextStyle(fontSize: 18, color: Colors.black),overflow: TextOverflow.ellipsis,))
+                          Expanded(
+                              child: Text(
+                            "งานตรวจสอบค่า Safety Clearance และ Ground Clearance ของสายส่ง",
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          ))
                         ],
                       ),
                       Row(
@@ -128,17 +129,16 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                           future: _profile,
                           builder: (BuildContext context,
                               AsyncSnapshot<ProfileDao> snapshot) {
-
                             if (snapshot.hasData) {
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(data.firstname, data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data!.imageUrl);
                             }
                             return Center(
-                              child: Loading(
-                                  indicator: BallSpinFadeLoaderIndicator(),
-                                  size: 40.0,
-                                  color: Colors.yellow),
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.yellow),
+                              ),
                             );
                           }),
                       Padding(
@@ -157,7 +157,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -180,7 +180,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -198,15 +198,13 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                           child: OutlineButton(
                             onPressed: () => {
                               DatePicker.showTimePicker(context,
-                                  onChanged: (time) {
-
-                                  }, onConfirm: (time) {
-                                    setState(() {
-                                      var t =  DateFormat.Hm().format(time);
-                                      print(t);
-                                      _timeChoose = t;
-                                    });
-                                  }, showTitleActions: true, locale: LocaleType.th)
+                                  onChanged: (time) {}, onConfirm: (time) {
+                                setState(() {
+                                  var t = DateFormat.Hm().format(time);
+                                  print(t);
+                                  _timeChoose = t;
+                                });
+                              }, showTitleActions: true, locale: LocaleType.th)
                             },
                             textColor: Colors.black,
                             borderSide: BorderSide(
@@ -236,7 +234,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -260,7 +258,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -284,7 +282,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -307,7 +305,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -390,19 +388,25 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
-                                textColor: Colors.white,
-                                color: Colors.amberAccent,
+                              child: ElevatedButton(
+                                child: Text('บันทึก'),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.amberAccent,
+                                  textStyle: TextStyle(color: Colors.white),
+                                ),
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
-                                    var towerNo =reportDao != null ? reportDao.towerId : MyApp.tower.id;
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
+                                    var towerNo = reportDao != null
+                                        ? reportDao!.towerId
+                                        : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
-                                      "value": "งานตรวจสอบค่า Safety Clearance และ Ground Clearance ของสายส่ง"
+                                      "value":
+                                          "งานตรวจสอบค่า Safety Clearance และ Ground Clearance ของสายส่ง"
                                     });
                                     body.add({
                                       "key": "time",
@@ -410,7 +414,6 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                                       "value": _timeChoose
                                     });
                                     for (var i = 0; i < topic.length; i++) {
-
                                       body.add({
                                         "key": topic[i],
                                         "type": "string",
@@ -419,32 +422,27 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body,
-                                        "9",
-                                        towerNo,
-                                        reportDao
-                                    );
+                                        body, "9", towerNo, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,
-                                        builder: (context ) => Container(
-                                          width: 40,
-                                          height: 40,
-                                          child: Center(
-                                            child: Loading(
-                                              indicator: BallSpinFadeLoaderIndicator(),
-                                              size: 40.0,
-                                              color: Colors.yellow,
-                                            ),
-                                          ),
-                                        )
-                                    );
-                                    SendReportUseCase.serReport(oj,(response){
+                                        builder: (context) => Container(
+                                              width: 40,
+                                              height: 40,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          Colors.yellow),
+                                                ),
+                                              ),
+                                            ));
+                                    SendReportUseCase.serReport(oj, (response) {
                                       sentAttechment(response);
                                     });
                                   }
                                 },
-                                child: Text('บันทึก'),
                               ),
                             ),
                           )

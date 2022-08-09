@@ -7,14 +7,13 @@ import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm6 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm6({ReportDao? reportDao }) {
+  AddReportForm6({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
@@ -27,44 +26,44 @@ class AddReportForm6 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
-
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm6State({ReportDao? reportDao }) {
+  MyCustomAddReportForm6State({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
 
   List<String> topic = Topic.report12;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController =
+        List.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.name;
       mEditingController[1].text = MyApp.tower.type;
     }
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -80,8 +79,8 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
 
     return SafeArea(
         child: Scaffold(
-          body: Builder(
-              builder: (context) => Form(
+      body: Builder(
+          builder: (context) => Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Column(
@@ -97,11 +96,11 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           ),
                           Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                                const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             child: Text(
                               "ตรวจวัดค่า Ground Resistance",
                               style:
-                              TextStyle(fontSize: 18, color: Colors.black),
+                                  TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           )
                         ],
@@ -110,14 +109,14 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                         children: <Widget>[
                           Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
+                                const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
                             child: Text("ในหมวด",
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.black38)),
                           ),
                           Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 0.0),
+                                const EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 0.0),
                             child: Text("งานบำรุงรักษาเชิงป้องกัน (PM)",
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black)),
@@ -129,15 +128,15 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           builder: (BuildContext context,
                               AsyncSnapshot<ProfileDao> snapshot) {
                             if (snapshot.hasData) {
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(data.firstname, data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data!.imageUrl);
                             }
                             return Center(
-                              child: Loading(
-                                  indicator: BallSpinFadeLoaderIndicator(),
-                                  size: 40.0,
-                                  color: Colors.yellow),
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.yellow),
+                              ),
                             );
                           }),
                       Padding(
@@ -156,7 +155,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -179,7 +178,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -188,7 +187,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                       ),
                       Padding(
                         padding:
-                        const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
+                            const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
                         child: Text(
                           "ค่า resistance ก่อนวันที่ตรวจวัด",
                           style: TextStyle(
@@ -203,7 +202,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[2],
                                 maxLines: 1,
@@ -224,7 +223,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
+                                  EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[3],
                                 maxLines: 1,
@@ -245,7 +244,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 0.0),
+                                  EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[4],
                                 maxLines: 1,
@@ -266,7 +265,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 0.0),
+                                  EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[5],
                                 maxLines: 1,
@@ -288,7 +287,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                       ),
                       Padding(
                         padding:
-                        const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
+                            const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
                         child: Text(
                           "ค่า resistance หลังวันที่ตรวจวัด",
                           style: TextStyle(
@@ -303,7 +302,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[6],
                                 maxLines: 1,
@@ -324,7 +323,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
+                                  EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[7],
                                 maxLines: 1,
@@ -345,7 +344,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 0.0),
+                                  EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[8],
                                 maxLines: 1,
@@ -366,7 +365,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 0.0),
+                                  EdgeInsets.fromLTRB(0.0, 10.0, 20.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[9],
                                 maxLines: 1,
@@ -392,7 +391,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[10],
                                 maxLines: 1,
@@ -408,7 +407,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -419,7 +418,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                           Flexible(
                             child: Padding(
                               padding:
-                              EdgeInsets.fromLTRB(8.0, 20.0, 20.0, 0.0),
+                                  EdgeInsets.fromLTRB(8.0, 20.0, 20.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[11],
                                 maxLines: 1,
@@ -435,7 +434,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -495,7 +494,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -530,64 +529,67 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                         children: <Widget>[
                           Flexible(
                               child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text("วันที่บันทึก",
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.black38)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text(today,
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.black)),
-                                    )
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text("วันที่บันทึก",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black38)),
                                 ),
-                              )),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text(today,
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                )
+                              ],
+                            ),
+                          )),
                           Flexible(
                               child: Container(
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text("เวลา",
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.black38)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20.0, 8.0, 0.0, 8.0),
-                                      child: Text(time,
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.black)),
-                                    )
-                                  ],
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text("เวลา",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black38)),
                                 ),
-                              )),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 8.0),
+                                  child: Text(time,
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                )
+                              ],
+                            ),
+                          )),
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
-                                textColor: Colors.white,
-                                color: Colors.amberAccent,
+                              child: ElevatedButton(
+                                child: Text('บันทึก'),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.amberAccent,
+                                  textStyle: TextStyle(color: Colors.white),
+                                ),
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
                                     var towerNo = reportDao != null
-                                        ? reportDao.towerId
+                                        ? reportDao!.towerId
                                         : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
@@ -603,28 +605,27 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "6", towerNo, reportDao);
+                                        body, "6", towerNo, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => Container(
-                                          width: 40,
-                                          height: 40,
-                                          child: Center(
-                                            child: Loading(
-                                              indicator:
-                                              BallSpinFadeLoaderIndicator(),
-                                              size: 40.0,
-                                              color: Colors.yellow,
-                                            ),
-                                          ),
-                                        ));
+                                              width: 40,
+                                              height: 40,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          Colors.yellow),
+                                                ),
+                                              ),
+                                            ));
                                     SendReportUseCase.serReport(oj, (response) {
                                       sentAttechment(response);
                                     });
                                   }
                                 },
-                                child: Text('บันทึก'),
                               ),
                             ),
                           )
@@ -634,6 +635,6 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
                   ),
                 ),
               )),
-        ));
+    ));
   }
 }

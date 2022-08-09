@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -14,11 +15,10 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-
 class AddReportForm10 extends StatefulWidget {
   var reportDao;
 
-  AddReportForm10({ReportDao? reportDao }) {
+  AddReportForm10({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
@@ -31,31 +31,31 @@ class AddReportForm10 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm10State extends State<AddReportForm10> {
-  ReportDao reportDao;
-  DateTime _timeChoose;
-  DateTime _dateChoose;
-  DateTime _timeChoose2;
-  DateTime _dateChoose2;
-  List<File> _file;
-  String dropdownTripValue;
-  String dropdownFixedValue;
+  late ReportDao? reportDao;
+  late DateTime _timeChoose;
+  late DateTime _dateChoose;
+  late DateTime _timeChoose2;
+  late DateTime _dateChoose2;
+  late List<File> _file;
+  late String dropdownTripValue;
+  late String dropdownFixedValue;
 
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm10State({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
+  MyCustomAddReportForm10State({ReportDao? reportDao}) {
+    this.reportDao = reportDao!;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
 
   List<String> topic = Topic.report25;
-  List<TextEditingController> mEditingController;
-  List<String> _problem;
+  late List<TextEditingController> mEditingController;
+  late List<String> _problem;
 
   @override
   void initState() {
@@ -64,36 +64,35 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
     _dateChoose = DateTime.now();
     _timeChoose2 = DateTime.now();
     _dateChoose2 = DateTime.now();
-    _problem = new List();
-    _file = List(4);
+    _problem = [];
+    _file = List.filled(4,0).cast<File>();
     dropdownTripValue = "เลือกทริป";
     dropdownFixedValue = "ดำเนินการทันที";
-    mEditingController = new List(topic.length);
+    mEditingController =
+        List.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.name;
-    }else{
-      try{
-        if(initialText("problem").isNotEmpty){
-          _problem = initialText("problem").split(",");
+    } else {
+      try {
+        if (initialText("problem")!.isNotEmpty) {
+          _problem = initialText("problem")!.split(",");
           mEditingController[12].text = "";
         }
-      }catch(e){
-
-      }
+      } catch (e) {}
     }
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -111,689 +110,703 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
         child: Scaffold(
             body: Builder(
                 builder: (context) => Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.arrow_back),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                            Row(
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 0.0, 20.0, 0.0),
+                                  child: Text(
+                                    "งานตรวจหาสาเหตุสายขัดข้อง",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                )
+                              ],
                             ),
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      20.0, 8.0, 0.0, 0.0),
+                                  child: Text("ในหมวด",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black38)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      5.0, 8.0, 0.0, 0.0),
+                                  child: Text("งานบำรุงรักษาแบบแก้ไข(cm)",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                ),
+                              ],
+                            ),
+                            FutureBuilder(
+                                future: _profile,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<ProfileDao> snapshot) {
+                                  if (snapshot.hasData) {
+                                    ProfileDao data = snapshot.data!;
+                                    return FromUserSection(data.firstname,
+                                        data.team, snapshot.data!.imageUrl);
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor:
+                                          AlwaysStoppedAnimation(Colors.yellow),
+                                    ),
+                                  );
+                                }),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  20.0, 0.0, 20.0, 0.0),
-                              child: Text(
-                                "งานตรวจหาสาเหตุสายขัดข้อง",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black),
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[0],
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  labelText: "สายส่ง",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกสายส่ง",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  20.0, 8.0, 0.0, 0.0),
-                              child: Text("ในหมวด",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.black38)),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  5.0, 8.0, 0.0, 0.0),
-                              child: Text("งานบำรุงรักษาแบบแก้ไข(cm)",
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[1],
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  labelText: "ช่วง",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกช่วง",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[2],
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  labelText: "วงจร",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกวงจร",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Text("trip วันที่",
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.black)),
                             ),
-                          ],
-                        ),
-                        FutureBuilder(
-                            future: _profile,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<ProfileDao> snapshot) {
-                              if (snapshot.hasData) {
-                                ProfileDao data = snapshot.data;
-                                return FromUserSection(data.firstname,
-                                    data.team, snapshot.data.imageUrl);
-                              }
-                              return Center(
-                                child: Loading(
-                                    indicator:
-                                    BallSpinFadeLoaderIndicator(),
-                                    size: 40.0,
-                                    color: Colors.yellow),
-                              );
-                            }),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[0],
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              labelText: "สายส่ง",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกสายส่ง",
-                              //fillColor: Colors.green
-                            ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[1],
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              labelText: "ช่วง",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกช่วง",
-                              //fillColor: Colors.green
-                            ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[2],
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              labelText: "วงจร",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกวงจร",
-                              //fillColor: Colors.green
-                            ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Text("trip วันที่",
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.black)),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    20.0, 20.0, 0.0, 0.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: OutlineButton(
-                                    onPressed: () => {
-                                      DatePicker.showDatePicker(context,
-                                          currentTime: _dateChoose,
-                                          onConfirm: (time) {
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        20.0, 20.0, 0.0, 0.0),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton(
+                                        onPressed: () => {
+                                          DatePicker.showDatePicker(context,
+                                              currentTime: _dateChoose,
+                                              onConfirm: (time) {
                                             setState(() {
                                               _dateChoose = time;
                                             });
                                           },
-                                          showTitleActions: true,
-                                          locale: LocaleType.th)
-                                    },
-                                    textColor: Colors.black,
-                                    borderSide: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1.0,
-                                        style: BorderStyle.solid),
-                                    child: Text(
-                                      DateFormat("dd/MM/yyyy")
-                                          .format(_dateChoose),
+                                              showTitleActions: true,
+                                              locale: LocaleType.th)
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          side: BorderSide(
+                                              color: Colors.grey,
+                                              width: 1.0,
+                                              style: BorderStyle.solid),
+                                        ),
+                                        child: Text(
+                                          DateFormat("dd/MM/yyyy")
+                                              .format(_dateChoose),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Flexible(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    0.0, 20.0, 20.0, 0.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: OutlineButton(
-                                    onPressed: () => {
-                                      DatePicker.showTimePicker(context,
-                                          currentTime: _timeChoose,
-                                          onConfirm: (time) {
+                                Flexible(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        0.0, 20.0, 20.0, 0.0),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton(
+                                        onPressed: () => {
+                                          DatePicker.showTimePicker(context,
+                                              currentTime: _timeChoose,
+                                              onConfirm: (time) {
                                             setState(() {
                                               _timeChoose = time;
                                             });
                                           },
-                                          showTitleActions: true,
-                                          locale: LocaleType.th)
-                                    },
-                                    textColor: Colors.black,
-                                    borderSide: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1.0,
-                                        style: BorderStyle.solid),
-                                    child: Text(
-                                      DateFormat("HH:mm")
-                                          .format(_timeChoose),
+                                              showTitleActions: true,
+                                              locale: LocaleType.th)
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          side: BorderSide(
+                                              color: Colors.grey,
+                                              width: 1.0,
+                                              style: BorderStyle.solid),
+                                        ),
+                                        child: Text(
+                                          DateFormat("HH:mm")
+                                              .format(_timeChoose),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                            child: Container(
-                              width: double.infinity,
-                              child: DropdownButton<String>(
-                                value: dropdownTripValue,
-                                elevation: 16,
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    dropdownTripValue = newValue;
-                                  });
-                                },
-                                items: <String>[
-                                  'เลือกทริป',
-                                  'Permanent',
-                                  'Temporary',
-                                  'Transient'
-                                ].map<DropdownMenuItem<String>>(
+                                )
+                              ],
+                            ),
+                            Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  child: DropdownButton<String>(
+                                    value: dropdownTripValue,
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownTripValue = newValue!;
+                                      });
+                                    },
+                                    items: <String>[
+                                      'เลือกทริป',
+                                      'Permanent',
+                                      'Temporary',
+                                      'Transient'
+                                    ].map<DropdownMenuItem<String>>(
                                         (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),
                                       );
                                     }).toList(),
-                              ),
-                            )),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Text("Relay Show",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black)),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[3],
-                            decoration: InputDecoration(
-                              labelText: "สฟ.",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Text("Relay Show",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.black)),
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[4],
-                            decoration: InputDecoration(
-                              labelText: "อากาศ",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[3],
+                                decoration: InputDecoration(
+                                  labelText: "สฟ.",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[5],
-                            decoration: InputDecoration(
-                              labelText: "Relay",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[4],
+                                decoration: InputDecoration(
+                                  labelText: "อากาศ",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[6],
-                            decoration: InputDecoration(
-                              labelText: "LFL",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[5],
+                                decoration: InputDecoration(
+                                  labelText: "Relay",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[7],
-                            decoration: InputDecoration(
-                              labelText: "AFA",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[6],
+                                decoration: InputDecoration(
+                                  labelText: "LFL",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[8],
-                            decoration: InputDecoration(
-                              labelText: "LLS",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[7],
+                                decoration: InputDecoration(
+                                  labelText: "AFA",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Text("รายละเอียดการตรวจ",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black)),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[9],
-                            decoration: InputDecoration(
-                              labelText: "ได้รับแจ้งจาก",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[8],
+                                decoration: InputDecoration(
+                                  labelText: "LLS",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Text("วันเวลาที่ตรวจ",
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.black)),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    20.0, 20.0, 0.0, 0.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: OutlineButton(
-                                    onPressed: () => {
-                                      DatePicker.showDatePicker(context,
-                                          currentTime: _dateChoose2,
-                                          onConfirm: (time) {
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Text("รายละเอียดการตรวจ",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.black)),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[9],
+                                decoration: InputDecoration(
+                                  labelText: "ได้รับแจ้งจาก",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Text("วันเวลาที่ตรวจ",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black)),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        20.0, 20.0, 0.0, 0.0),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton(
+                                        onPressed: () => {
+                                          DatePicker.showDatePicker(context,
+                                              currentTime: _dateChoose2,
+                                              onConfirm: (time) {
                                             setState(() {
                                               _dateChoose2 = time;
                                             });
                                           },
-                                          showTitleActions: true,
-                                          locale: LocaleType.th)
-                                    },
-                                    textColor: Colors.black,
-                                    borderSide: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1.0,
-                                        style: BorderStyle.solid),
-                                    child: Text(
-                                      DateFormat("dd/MM/yyyy")
-                                          .format(_dateChoose2),
+                                              showTitleActions: true,
+                                              locale: LocaleType.th)
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          side: BorderSide(
+                                              color: Colors.grey,
+                                              width: 1.0,
+                                              style: BorderStyle.solid),
+                                        ),
+                                        child: Text(
+                                          DateFormat("dd/MM/yyyy")
+                                              .format(_dateChoose2),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Flexible(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    0.0, 20.0, 20.0, 0.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: OutlineButton(
-                                    onPressed: () => {
-                                      DatePicker.showTimePicker(context,
-                                          currentTime: _timeChoose2,
-                                          onConfirm: (time) {
+                                Flexible(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                        0.0, 20.0, 20.0, 0.0),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: OutlinedButton(
+                                        onPressed: () => {
+                                          DatePicker.showTimePicker(context,
+                                              currentTime: _timeChoose2,
+                                              onConfirm: (time) {
                                             setState(() {
                                               _timeChoose2 = time;
                                             });
                                           },
-                                          showTitleActions: true,
-                                          locale: LocaleType.th)
-                                    },
-                                    textColor: Colors.black,
-                                    borderSide: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1.0,
-                                        style: BorderStyle.solid),
-                                    child: Text(
-                                      DateFormat("HH:mm")
-                                          .format(_timeChoose2),
+                                              showTitleActions: true,
+                                              locale: LocaleType.th)
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          side: BorderSide(
+                                              color: Colors.grey,
+                                              width: 1.0,
+                                              style: BorderStyle.solid),
+                                        ),
+                                        child: Text(
+                                          DateFormat("HH:mm")
+                                              .format(_timeChoose2),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Text("ผลการตรวจ",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black)),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[10],
-                            decoration: InputDecoration(
-                              labelText: "ผลการตรวจ",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
+                                )
+                              ],
                             ),
-                            validator: (val) {
-                              if (val.length == 0)
-                                return "โปรดกรอกข้อความ";
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                            child: Container(
-                              width: double.infinity,
-                              child: DropdownButton<String>(
-                                value: dropdownFixedValue,
-                                elevation: 16,
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    dropdownFixedValue = newValue;
-                                  });
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Text("ผลการตรวจ",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.black)),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[10],
+                                decoration: InputDecoration(
+                                  labelText: "ผลการตรวจ",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                validator: (val) {
+                                  if (val!.length == 0)
+                                    return "โปรดกรอกข้อความ";
+                                  else
+                                    return null;
                                 },
-                                items: <String>['ดำเนินการทันที', 'รอแก้ไข']
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
+                              ),
+                            ),
+                            Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  child: DropdownButton<String>(
+                                    value: dropdownFixedValue,
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownFixedValue = newValue!;
+                                      });
+                                    },
+                                    items: <String>['ดำเนินการทันที', 'รอแก้ไข']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),
                                       );
                                     }).toList(),
-                              ),
-                            )),
-                        GridView.count(
-                            shrinkWrap: true,
-                            primary: false,
-                            padding: const EdgeInsets.all(20),
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            crossAxisCount: 2,
-                            children: <Widget>[
-                              Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Material(
-                                      child: InkWell(
+                                  ),
+                                )),
+                            GridView.count(
+                                shrinkWrap: true,
+                                primary: false,
+                                padding: const EdgeInsets.all(20),
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                crossAxisCount: 2,
+                                children: <Widget>[
+                                  Container(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Material(
+                                          child: InkWell(
                                         onTap: () {
                                           getImage(0);
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.0),
                                             child: prepareImage(_file[0], 0),
                                           ),
                                         ),
                                       ))),
-                              Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Material(
-                                      child: InkWell(
+                                  Container(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Material(
+                                          child: InkWell(
                                         onTap: () {
                                           getImage(1);
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.0),
                                             child: prepareImage(_file[1], 1),
                                           ),
                                         ),
                                       ))),
-                              Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Material(
-                                      child: InkWell(
+                                  Container(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Material(
+                                          child: InkWell(
                                         onTap: () {
                                           getImage(2);
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.0),
                                             child: prepareImage(_file[2], 2),
                                           ),
                                         ),
                                       ))),
-                              Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Material(
-                                      child: InkWell(
+                                  Container(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Material(
+                                          child: InkWell(
                                         onTap: () {
                                           getImage(3);
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(10.0),
+                                                BorderRadius.circular(10.0),
                                             child: prepareImage(_file[3], 3),
                                           ),
                                         ),
                                       ))),
-                            ]),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[11],
-                            decoration: InputDecoration(
-                              labelText: "วิธีแก้ไข",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
+                                ]),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[11],
+                                decoration: InputDecoration(
+                                  labelText: "วิธีแก้ไข",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
                               ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: Wrap(
-                            spacing: 10.0,
-                            children: <Widget>[
-                              for (var i = 0; i < _problem.length; i++)
-                                Chip(
-                                  backgroundColor: Colors.amber,
-                                  label: Text(_problem[i],style: TextStyle(color: Colors.white),),
-                                  deleteIconColor: Colors.white,
-                                  onDeleted: () {
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: Wrap(
+                                spacing: 10.0,
+                                children: <Widget>[
+                                  for (var i = 0; i < _problem.length; i++)
+                                    Chip(
+                                      backgroundColor: Colors.amber,
+                                      label: Text(
+                                        _problem[i],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      deleteIconColor: Colors.white,
+                                      onDeleted: () {
+                                        setState(() {
+                                          _problem.removeAt(i);
+                                        });
+                                      },
+                                    )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                              child: TextFormField(
+                                controller: mEditingController[12],
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.send),
+                                    onPressed: () {
+                                      if (mEditingController[12]
+                                          .text
+                                          .isNotEmpty) {
+                                        setState(() {
+                                          _problem
+                                              .add(mEditingController[12].text);
+                                          mEditingController[12].text = "";
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  labelText: "ปัญหาสำคัญที่พบเจอ",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(),
+                                  ),
+                                  hintText: "กรอกข้อมูล",
+                                  //fillColor: Colors.green
+                                ),
+                                onFieldSubmitted: (text) {
+                                  if (text.isNotEmpty) {
                                     setState(() {
-                                      _problem.removeAt(i);
-                                    });
-                                  },
-                                )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                          child: TextFormField(
-                            controller: mEditingController[12],
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.send),
-                                onPressed: () {
-                                  if (mEditingController[12]
-                                      .text
-                                      .isNotEmpty) {
-                                    setState(() {
-                                      _problem
-                                          .add(mEditingController[12].text);
-                                      mEditingController[12].text = "";
+                                      _problem.add(text);
+                                      mEditingController[11].text = "";
                                     });
                                   }
                                 },
                               ),
-                              labelText: "ปัญหาสำคัญที่พบเจอ",
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: "กรอกข้อมูล",
-                              //fillColor: Colors.green
-                            ),
-                            onFieldSubmitted: (text) {
-                              if (text.isNotEmpty) {
-                                setState(() {
-                                  _problem.add(text);
-                                  mEditingController[11].text = "";
-                                });
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
             bottomNavigationBar: Container(
               height: 87.0,
               child: Column(
@@ -803,64 +816,67 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                     children: <Widget>[
                       Flexible(
                           child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      20.0, 8.0, 0.0, 8.0),
-                                  child: Text("วันที่บันทึก",
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.black38)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      20.0, 8.0, 0.0, 8.0),
-                                  child: Text(today,
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.black)),
-                                )
-                              ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 8.0, 0.0, 8.0),
+                              child: Text("วันที่บันทึก",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black38)),
                             ),
-                          )),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 8.0, 0.0, 8.0),
+                              child: Text(today,
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black)),
+                            )
+                          ],
+                        ),
+                      )),
                       Flexible(
                           child: Container(
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      20.0, 8.0, 0.0, 8.0),
-                                  child: Text("เวลา",
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.black38)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      20.0, 8.0, 0.0, 8.0),
-                                  child: Text(time,
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.black)),
-                                )
-                              ],
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 8.0, 0.0, 8.0),
+                              child: Text("เวลา",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black38)),
                             ),
-                          )),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  20.0, 8.0, 0.0, 8.0),
+                              child: Text(time,
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black)),
+                            )
+                          ],
+                        ),
+                      )),
                       Flexible(
                         child: Padding(
                           padding: childPadding,
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.amberAccent,
+                          child: ElevatedButton(
+                            child: Text('บันทึก'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.amberAccent,
+                              textStyle: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () {
                               // Validate returns true if the form is valid, or false
                               // otherwise.
-                              if (_formKey.currentState.validate()) {
-                                List<Map> body = List();
+                              if (_formKey.currentState!.validate()) {
+                                List<Map> body = [];
                                 var towerNo = reportDao != null
-                                    ? reportDao.towerId
+                                    ? reportDao!.towerId
                                     : MyApp.tower.id;
                                 body.add({
                                   "key": "problem",
@@ -877,7 +893,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                   "key": "time_trip",
                                   "type": "string",
                                   "value":
-                                  DateFormat("HH:mm").format(_dateChoose2)
+                                      DateFormat("HH:mm").format(_dateChoose2)
                                 });
                                 body.add({
                                   "key": "date_report",
@@ -889,7 +905,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                   "key": "time_report",
                                   "type": "string",
                                   "value":
-                                  DateFormat("HH:mm").format(_dateChoose)
+                                      DateFormat("HH:mm").format(_dateChoose)
                                 });
                                 body.add({
                                   "key": "trip",
@@ -906,7 +922,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                   "type": "string",
                                   "value": "งานตรวจหาสาเหตุสายขัดข้อง"
                                 });
-                                for (var i = 0; i < topic.length-1; i++) {
+                                for (var i = 0; i < topic.length - 1; i++) {
                                   body.add({
                                     "key": topic[i],
                                     "type": "string",
@@ -917,24 +933,23 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                     context: context,
                                     barrierDismissible: false,
                                     builder: (context) => Container(
-                                      width: 40,
-                                      height: 40,
-                                      child: Center(
-                                        child: Loading(
-                                          indicator:
-                                          BallSpinFadeLoaderIndicator(),
-                                          size: 40.0,
-                                          color: Colors.yellow,
-                                        ),
-                                      ),
-                                    ));
+                                          width: 40,
+                                          height: 40,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      Colors.yellow),
+                                            ),
+                                          ),
+                                        ));
                                 var oj = ObjectRequestSendReport(
-                                    body, "10", towerNo, reportDao);
+                                    body, "10", towerNo, reportDao!);
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code < 300) {
+                                  if (response.code! < 300) {
                                     AttachmentService.createAttachment(
-                                        _file, response.reportId)
-                                        .then((Attacresponse) {
+                                            _file, response.reportId!)
+                                        .then((attacresponse) {
                                       sendDone(context, response);
                                     });
                                   } else
@@ -942,7 +957,6 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                 });
                               }
                             },
-                            child: Text('บันทึก'),
                           ),
                         ),
                       )
@@ -960,7 +974,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao.images[position];
+        var url = reportDao!.images[position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(
@@ -976,9 +990,9 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
   }
 
   Future getImage(index) async {
-    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
-      _file[index] = File(image.path);
+      _file[index] = File(image!.path);
     });
   }
 }

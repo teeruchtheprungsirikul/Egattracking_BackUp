@@ -9,16 +9,16 @@ class SendReportUseCase {
       ReportService.sendReport(
           ob.body, ob.type, ob.towerNo).then(f);
     }else {
-      ReportService.editReport(ob.body, ob.type, ob.towerNo, ob.reportDao.id).then(f);
+      ReportService.editReport(ob.body, ob.type, ob.towerNo, ob.reportDao!.id).then(f);
     }
   }
 }
 
 class ObjectRequestSendReport {
-  List<Map> body;
-  String type;
-  String towerNo;
-  ReportDao reportDao;
+  late List<Map> body;
+  late String type;
+  late String towerNo;
+  late ReportDao? reportDao;
 
   ObjectRequestSendReport(List<Map> body,
       String type,

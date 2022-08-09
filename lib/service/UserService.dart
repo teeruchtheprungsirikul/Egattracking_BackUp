@@ -39,7 +39,7 @@ class UserService {
       prefs.setString(keyaccesstoken, loginDao.accessToken);
       prefs.setString(keyrefreshtoken, loginDao.refreshToken);
       prefs.setString(keyusername, username);
-      prefs.setString(keyuserid, loginDao.uid);
+      prefs.setString(keyuserid, loginDao.uid!);
       prefs.setString(keyuserrole, loginDao.role);
     }
     return loginDao;

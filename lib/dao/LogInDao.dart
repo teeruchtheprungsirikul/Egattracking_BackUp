@@ -3,7 +3,7 @@ class LoginDao {
   String tokenType;
   int expiresIn;
   String refreshToken;
-  String uid;
+  String? uid;
   String role;
 
   LoginDao(
