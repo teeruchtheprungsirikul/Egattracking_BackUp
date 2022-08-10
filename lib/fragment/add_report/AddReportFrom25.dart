@@ -274,7 +274,8 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2,
+                                            width: 2.0
+ ,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -299,7 +300,8 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2,
+                                            width: 2.0
+ ,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -560,7 +562,8 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2,
+                                            width: 2.0
+ ,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -597,7 +600,8 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2,
+                                            width: 2.0
+ ,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),

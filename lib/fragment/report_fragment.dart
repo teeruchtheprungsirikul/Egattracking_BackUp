@@ -33,7 +33,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-
 import 'add_report/AddReportFrom24.dart';
 import 'add_report/AddReportFrom25.dart';
 
@@ -209,12 +208,14 @@ class MyCustomFormState extends State<ReportFragment> {
               width: double.infinity,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                    textStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    )),
+                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                  textStyle: TextStyle(color: Colors.black),
+                  side: BorderSide(
+                      color: Colors.grey, 
+                      width: 2.0, 
+                      style: BorderStyle.solid
+                    ),
+                ),
                 onPressed: goToMap,
                 child: Text(_single!.nameTower),
               ),

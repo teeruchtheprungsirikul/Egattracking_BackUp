@@ -67,7 +67,7 @@ class _FromUserSectionState extends State<FromUserSection> {
               borderRadius: BorderRadius.all(Radius.circular(50.0)),
               border: Border.all(
                 color: Colors.grey,
-                width: 1.0,
+                width: 2.0,
               ),
             ),
           ),

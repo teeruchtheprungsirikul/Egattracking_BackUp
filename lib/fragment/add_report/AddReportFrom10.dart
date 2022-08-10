@@ -273,7 +273,8 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                               TextStyle(color: Colors.black),
                                           side: BorderSide(
                                               color: Colors.grey,
-                                              width: 1.0,
+                                              width: 2.0
+ ,
                                               style: BorderStyle.solid),
                                         ),
                                         child: Text(
@@ -291,7 +292,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                     child: SizedBox(
                                       width: double.infinity,
                                       child: OutlinedButton(
-                                        onPressed: () => {
+                                        onPressed: () {
                                           DatePicker.showTimePicker(context,
                                               currentTime: _timeChoose,
                                               onConfirm: (time) {
@@ -300,14 +301,15 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th)
+                                              locale: LocaleType.th
+                                              );
                                         },
                                         style: OutlinedButton.styleFrom(
                                           textStyle:
                                               TextStyle(color: Colors.black),
                                           side: BorderSide(
                                               color: Colors.grey,
-                                              width: 1.0,
+                                              width: 2.0,
                                               style: BorderStyle.solid),
                                         ),
                                         child: Text(
@@ -555,7 +557,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                               TextStyle(color: Colors.black),
                                           side: BorderSide(
                                               color: Colors.grey,
-                                              width: 1.0,
+                                              width: 2.0,
                                               style: BorderStyle.solid),
                                         ),
                                         child: Text(
@@ -589,7 +591,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                               TextStyle(color: Colors.black),
                                           side: BorderSide(
                                               color: Colors.grey,
-                                              width: 1.0,
+                                              width: 2.0,
                                               style: BorderStyle.solid),
                                         ),
                                         child: Text(

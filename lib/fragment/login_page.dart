@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                         UserService.login(
                                 _userController.text, _passwordController.text)
                             .then((result) => {
-                                  Navigator.of(context).pop(true),
+                                  Navigator.pop(context),
                                   if (result.uid != null)
                                     widget.loginTriggeredAction(true)
                                   else
@@ -133,9 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                                               content: Text("can not login"),
                                               actions: <Widget>[
                                                 ElevatedButton(
-                                                  onPressed: () => {
-                                                    Navigator.of(context)
-                                                        .pop(true)
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
                                                   },
                                                   child: Text("OK"),
                                                 )

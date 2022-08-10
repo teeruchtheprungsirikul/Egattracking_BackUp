@@ -192,9 +192,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                         child: SizedBox(
                           width: double.infinity,
                           child: OutlinedButton(
-                            child: Text(
-                              _timeChoose,
-                            ),
+                            child: Text( _timeChoose),
                             onPressed: () {
                               DatePicker.showTimePicker(context,
                                   onChanged: (time) {}, onConfirm: (time) {
@@ -209,7 +207,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                               textStyle: TextStyle(color: Colors.black),
                               shape: StadiumBorder(),
                               side: BorderSide(
-                                width: 2,
+                                width: 2.0,
                                 color: Colors.grey,
                                 style: BorderStyle.solid,
                               ),

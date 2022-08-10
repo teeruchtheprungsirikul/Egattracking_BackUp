@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -54,10 +53,8 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
   void initState() {
     _profile = UserService.getProfile();
     _timeChoose = DateTime.now();
-    _file = List<int>.filled
- (4, 0).cast<File>();
-    List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+    _file = List<int>.filled(4, 0).cast<File>();
+    List<int>.filled(topic.length, 0).cast<TextEditingController>();
 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
@@ -175,7 +172,11 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: OutlinedButton(
-                                  onPressed: () => {
+                                  child: Text(
+                                    DateFormat("dd/MM/yyyy HH:mm")
+                                        .format(_timeChoose),
+                                  ),
+                                  onPressed: () {
                                     DatePicker.showDateTimePicker(context,
                                         currentTime: _timeChoose,
                                         onConfirm: (time) {
@@ -184,18 +185,17 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                       });
                                     },
                                         showTitleActions: true,
-                                        locale: LocaleType.th)
+                                        locale: LocaleType.th
+                                      );
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
+                                    textStyle: TextStyle(color: Colors.black),
+                                    shape: StadiumBorder(),
+                                    side: BorderSide(
+                                      width: 2.0,
+                                      color: Colors.grey,
+                                      style: BorderStyle.solid,
                                     ),
-                                  ),
-                                  child: Text(
-                                    DateFormat("dd/MM/yyyy HH:mm")
-                                        .format(_timeChoose),
                                   ),
                                 ),
                               ),
