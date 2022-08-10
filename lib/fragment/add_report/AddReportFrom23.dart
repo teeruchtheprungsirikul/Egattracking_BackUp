@@ -1,9 +1,6 @@
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
-import 'package:egattracking/home_page.dart';
-import 'package:egattracking/service/ReportService.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +12,10 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm23 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm23({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm23({Key? key, this.reportDao}) : super (key: key); 
+ 
 
   @override
   MyCustomAddReportForm23State createState() {
@@ -39,16 +35,18 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
   MyCustomAddReportForm23State({ReportDao? reportDao }) {
     this.reportDao = reportDao;
   }
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
   List<String> topic = Topic.report23;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
+ 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -56,12 +54,12 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values
+        return reportDao!.values
             .firstWhere((it) => it.key == key)
             .value;
       } catch (error) {
@@ -76,7 +74,9 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
     DateTime now = DateTime.now();
     String today = DateFormat.yMd().format(now);
     String time = DateFormat.Hm().format(now);
-    mEditingController = new List(topic.length);
+    List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
+ 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] = TextEditingController(text: initialText(topic[i]));
     }
@@ -110,13 +110,17 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                         builder: (BuildContext context, AsyncSnapshot<ProfileDao> snapshot) {
 
                             if(snapshot.hasData){
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(
                                   data.firstname,
                                   data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data!.imageUrl);
                             }
-                            return Center(child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 40.0,color: Colors.yellow),);
+                             return Center(
+                                child: CircularProgressIndicator(
+                                    valueColor:
+                                        AlwaysStoppedAnimation(Colors.yellow)));
+ 
                         }
                       ),
                       Padding(padding: EdgeInsets.fromLTRB(
@@ -136,7 +140,7 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -203,15 +207,18 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
-                                textColor: Colors.white,
-                                color: Colors.amberAccent,
+                              child: ElevatedButton(
+                                child: Text('บันทึก'),
+                               style: ElevatedButton.styleFrom(
+                                    primary: Colors.amberAccent,
+                                    textStyle: TextStyle(color: Colors.white)),
+ 
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
-                                    var towerNo =reportDao != null ? reportDao.towerId : MyApp.tower.id;
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
+                                    var towerNo =reportDao != null ? reportDao!.towerId : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -230,7 +237,7 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                                         body,
                                         "23",
                                         towerNo,
-                                        reportDao
+                                        reportDao!
                                     );
                                     showDialog(
                                         context: context,
@@ -238,13 +245,10 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                                         builder: (context ) => Container(
                                           width: 40,
                                           height: 40,
-                                          child: Center(
-                                            child: Loading(
-                                              indicator: BallSpinFadeLoaderIndicator(),
-                                              size: 40.0,
-                                              color: Colors.yellow,
-                                            ),
-                                          ),
+                                          child: CircularProgressIndicator(
+                                    valueColor:
+                                        AlwaysStoppedAnimation(Colors.yellow))
+ ,
                                         )
                                     );
                                     SendReportUseCase.serReport(oj,(response){
@@ -252,7 +256,7 @@ class MyCustomAddReportForm23State extends BaseStatefulState<AddReportForm23> {
                                     });
                                   }
                                 },
-                                child: Text('บันทึก'),
+                                
                               ),
                             ),
                           )

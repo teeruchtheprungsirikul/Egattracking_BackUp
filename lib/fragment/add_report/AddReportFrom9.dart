@@ -1,8 +1,6 @@
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
-import 'package:egattracking/service/ReportService.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +12,9 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm9 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm9({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm9({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm9State createState() {
@@ -62,7 +58,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List.filled(topic.length, 0).cast<TextEditingController>();
+        List<int>.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -195,8 +191,11 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                         padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                         child: SizedBox(
                           width: double.infinity,
-                          child: OutlineButton(
-                            onPressed: () => {
+                          child: OutlinedButton(
+                            child: Text(
+                              _timeChoose,
+                            ),
+                            onPressed: () {
                               DatePicker.showTimePicker(context,
                                   onChanged: (time) {}, onConfirm: (time) {
                                 setState(() {
@@ -204,15 +203,16 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                                   print(t);
                                   _timeChoose = t;
                                 });
-                              }, showTitleActions: true, locale: LocaleType.th)
+                              }, showTitleActions: true, locale: LocaleType.th);
                             },
-                            textColor: Colors.black,
-                            borderSide: BorderSide(
+                            style: OutlinedButton.styleFrom(
+                              textStyle: TextStyle(color: Colors.black),
+                              shape: StadiumBorder(),
+                              side: BorderSide(
+                                width: 2,
                                 color: Colors.grey,
-                                width: 1.0,
-                                style: BorderStyle.solid),
-                            child: Text(
-                              _timeChoose,
+                                style: BorderStyle.solid,
+                              ),
                             ),
                           ),
                         ),

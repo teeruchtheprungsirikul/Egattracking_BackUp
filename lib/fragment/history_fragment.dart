@@ -1,6 +1,5 @@
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom1.dart';
-import 'package:egattracking/fragment/edit_profile_fragment.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom2.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom3.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom4.dart';
@@ -28,10 +27,6 @@ import 'package:egattracking/fragment/add_report/AddReportFrom25.dart';
 import 'package:egattracking/service/ReportService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui';
-import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:core';
 

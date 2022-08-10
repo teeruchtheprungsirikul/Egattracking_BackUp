@@ -1,6 +1,5 @@
 import 'package:egattracking/Single.dart';
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:egattracking/fragment/BaseStatefulState.dart';
@@ -50,7 +49,8 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List.filled(topic.length, 0).cast<TextEditingController>();
+        List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));

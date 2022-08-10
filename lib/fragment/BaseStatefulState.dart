@@ -11,7 +11,8 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   // List<File> file = factory as List<File>;
   // filled(length, fill, {bool growable = false});
 
-  List<File> file = List<int>.filled(2,0).cast<File>();
+  List<File> file = List<int>.filled
+ (2,0,).cast<File>();
   //List<int> file = List<int>.filled(2, 0);
   late ReportDao? reportDao;
   String urgent = "ไม่เร่งด่วน";

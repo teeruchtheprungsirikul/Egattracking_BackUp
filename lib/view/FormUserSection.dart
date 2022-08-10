@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:egattracking/models/section.dart';
 import 'package:flutter/material.dart';
 

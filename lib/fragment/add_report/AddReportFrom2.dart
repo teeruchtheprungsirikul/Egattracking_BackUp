@@ -1,9 +1,7 @@
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:egattracking/fragment/add_report/SendReportUseCase.dart';
-import 'package:egattracking/service/ReportService.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormDifficultySection.dart';
 import 'package:egattracking/view/FormUserSection.dart';

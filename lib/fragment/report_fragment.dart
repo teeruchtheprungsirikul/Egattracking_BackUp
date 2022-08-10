@@ -1,10 +1,7 @@
 import 'dart:io' show Platform, exit;
-import 'dart:ui';
-
 import 'package:egattracking/Single.dart';
 import 'package:egattracking/dao/DataTower.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
-import 'package:egattracking/dao/TowerDao.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom1.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom10.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom11.dart';
@@ -18,8 +15,6 @@ import 'package:egattracking/fragment/add_report/AddReportFrom18.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom19.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom2.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom20.dart';
-import 'package:egattracking/fragment/add_report/AddReportFrom21.dart';
-import 'package:egattracking/fragment/add_report/AddReportFrom22.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom23.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom3.dart';
 import 'package:egattracking/fragment/add_report/AddReportFrom4.dart';

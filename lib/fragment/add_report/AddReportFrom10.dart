@@ -1,6 +1,4 @@
 import 'dart:io';
-
-
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -16,11 +14,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class AddReportForm10 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm10({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm10({Key? key, this.reportDao }) : super (key: key) ;
+    
+ 
 
   @override
   MyCustomAddReportForm10State createState() {
@@ -65,11 +63,13 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
     _timeChoose2 = DateTime.now();
     _dateChoose2 = DateTime.now();
     _problem = [];
-    _file = List.filled(4,0).cast<File>();
+    _file = List<int>.filled
+ (4,0).cast<File>();
     dropdownTripValue = "เลือกทริป";
     dropdownFixedValue = "ดำเนินการทันที";
     mEditingController =
-        List.filled(topic.length, 0).cast<TextEditingController>();
+        List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));

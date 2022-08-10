@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:egattracking/dao/ProfileDao.dart';
-import 'package:egattracking/fragment/edit_profile_fragment.dart';
+
 import 'package:egattracking/service/UserService.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'dart:ui';
 
 import 'dart:core';
 
@@ -80,7 +78,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.yellow)));
         },
       ),
       bottomNavigationBar: Padding(
@@ -92,9 +92,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
             Navigator.pop(context);
           },
           style: TextButton.styleFrom(
-            primary: Colors.red,
-            backgroundColor: Colors.white
-          ),
+              primary: Colors.red, backgroundColor: Colors.white),
           // color: Colors.white,
           // textColor: Colors.red,
           child: Row(

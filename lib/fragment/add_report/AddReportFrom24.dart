@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -12,16 +13,13 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../main.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm24 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm24({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm24({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm24State createState() {
@@ -32,32 +30,35 @@ class AddReportForm24 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm24State extends State<AddReportForm24> {
-  ReportDao reportDao;
-  DateTime _timeChoose;
-  List<File> _file;
+  late ReportDao? reportDao;
+  late DateTime _timeChoose;
+  late List<File> _file;
 
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm24State({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
+  MyCustomAddReportForm24State({ReportDao? reportDao}) {
+    this.reportDao = reportDao!;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
 
   List<String> topic = Topic.report24;
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
     _timeChoose = DateTime.now();
-    _file = List(4);
-    mEditingController = new List(topic.length);
+    _file = List<int>.filled
+ (4, 0).cast<File>();
+    List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
+
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -65,12 +66,12 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -83,7 +84,6 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
     DateTime now = DateTime.now();
     String today = DateFormat.yMd().format(now);
     String time = DateFormat.Hm().format(now);
-
 
     return SafeArea(
         child: Scaffold(
@@ -105,8 +105,11 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
                                       20.0, 0.0, 20.0, 0.0),
-                                  child: Text("รูปภาพการปฏิบัติงาน",
-                                    style: TextStyle(fontSize: 18, color: Colors.black),),
+                                  child: Text(
+                                    "รูปภาพการปฏิบัติงาน",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
                                 )
                               ],
                             ),
@@ -132,21 +135,15 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                 future: _profile,
                                 builder: (BuildContext context,
                                     AsyncSnapshot<ProfileDao> snapshot) {
-
                                   if (snapshot.hasData) {
-                                    ProfileDao data = snapshot.data;
-                                    return FromUserSection(
-                                        data.firstname,
-                                        data.team,
-                                        snapshot.data.imageUrl);
+                                    ProfileDao data = snapshot.data!;
+                                    return FromUserSection(data.firstname,
+                                        data.team, snapshot.data!.imageUrl);
                                   }
                                   return Center(
-                                    child: Loading(
-                                        indicator:
-                                            BallSpinFadeLoaderIndicator(),
-                                        size: 40.0,
-                                        color: Colors.yellow),
-                                  );
+                                      child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation(
+                                              Colors.yellow)));
                                 }),
                             Padding(
                               padding:
@@ -165,7 +162,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -177,7 +174,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                   EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                               child: SizedBox(
                                 width: double.infinity,
-                                child: OutlineButton(
+                                child: OutlinedButton(
                                   onPressed: () => {
                                     DatePicker.showDateTimePicker(context,
                                         currentTime: _timeChoose,
@@ -189,11 +186,13 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                         showTitleActions: true,
                                         locale: LocaleType.th)
                                   },
-                                  textColor: Colors.black,
-                                  borderSide: BorderSide(
-                                      color: Colors.grey,
-                                      width: 1.0,
-                                      style: BorderStyle.solid),
+                                  style: OutlinedButton.styleFrom(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   child: Text(
                                     DateFormat("dd/MM/yyyy HH:mm")
                                         .format(_timeChoose),
@@ -210,69 +209,69 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                 crossAxisCount: 2,
                                 children: <Widget>[
                                   Container(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Material(
-                                        child: InkWell(
-                                          onTap: (){
-                                            getImage(0);
-                                          },
-                                          child: Container(
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                              child: prepareImage(_file[0],0),
-                                            ),),
-                                        )
-                                    )
-                                  ),
+                                      padding: const EdgeInsets.all(8),
+                                      child: Material(
+                                          child: InkWell(
+                                        onTap: () {
+                                          getImage(0);
+                                        },
+                                        child: Container(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: prepareImage(_file[0], 0),
+                                          ),
+                                        ),
+                                      ))),
                                   Container(
                                       padding: const EdgeInsets.all(8),
                                       child: Material(
                                           child: InkWell(
-                                            onTap: (){
-                                              getImage(1);
-                                            },
-                                            child: Container(
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                child: prepareImage(_file[1],1),
-                                              ),),
-                                          )
-                                      )
-                                  ),
+                                        onTap: () {
+                                          getImage(1);
+                                        },
+                                        child: Container(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: prepareImage(_file[1], 1),
+                                          ),
+                                        ),
+                                      ))),
                                   Container(
                                       padding: const EdgeInsets.all(8),
                                       child: Material(
                                           child: InkWell(
-                                            onTap: (){
-                                              getImage(2);
-                                            },
-                                            child: Container(
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                child: prepareImage(_file[2],2),
-                                              ),),
-                                          )
-                                      )
-                                  ),
+                                        onTap: () {
+                                          getImage(2);
+                                        },
+                                        child: Container(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: prepareImage(_file[2], 2),
+                                          ),
+                                        ),
+                                      ))),
                                   Container(
                                       padding: const EdgeInsets.all(8),
                                       child: Material(
                                           child: InkWell(
-                                            onTap: (){
-                                              getImage(3);
-                                            },
-                                            child: Container(
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                child: prepareImage(_file[3],3),
-                                              ),),
-                                          )
-                                      )
-                                  ),
+                                        onTap: () {
+                                          getImage(3);
+                                        },
+                                        child: Container(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: prepareImage(_file[3], 3),
+                                          ),
+                                        ),
+                                      ))),
                                 ]),
                             Padding(
                               padding:
-                              EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                                  EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                               child: TextFormField(
                                 controller: mEditingController[1],
                                 decoration: InputDecoration(
@@ -286,7 +285,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -354,23 +353,25 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                       Flexible(
                         child: Padding(
                           padding: childPadding,
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.amberAccent,
+                          child: ElevatedButton(
+                            child: Text('บันทึก'),
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.amberAccent,
+                                textStyle: TextStyle(color: Colors.white)),
                             onPressed: () {
                               // Validate returns true if the form is valid, or false
                               // otherwise.
-                              if (_formKey.currentState.validate()) {
-                                List<Map> body = List();
-                                var towerNo = reportDao != null ? reportDao
-                                    .towerId : MyApp.tower.id;
+                              if (_formKey.currentState!.validate()) {
+                                List<Map> body = [];
+                                var towerNo = reportDao != null
+                                    ? reportDao!.towerId
+                                    : MyApp.tower.id;
                                 body.add({
                                   "key": "name",
                                   "type": "string",
                                   "value": "รูปภาพการปฏิบัติงาน"
                                 });
                                 for (var i = 0; i < topic.length; i++) {
-
                                   body.add({
                                     "key": topic[i],
                                     "type": "string",
@@ -381,26 +382,24 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                     context: context,
                                     barrierDismissible: false,
                                     builder: (context) => Container(
-                                      width: 40,
-                                      height: 40,
-                                      child: Center(
-                                        child: Loading(
-                                          indicator:
-                                          BallSpinFadeLoaderIndicator(),
-                                          size: 40.0,
-                                          color: Colors.yellow,
-                                        ),
-                                      ),
-                                    ));
+                                          width: 40,
+                                          height: 40,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        Colors.yellow)),
+                                          ),
+                                        ));
 
                                 var oj = ObjectRequestSendReport(
-                                    body, "24", towerNo, reportDao);
+                                    body, "24", towerNo, reportDao!);
 
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code < 300) {
+                                  if (response.code! < 300) {
                                     AttachmentService.createAttachment(
-                                        _file, response.reportId)
-                                        .then((Attacresponse) {
+                                            _file, response.reportId!)
+                                        .then((attacresponse) {
                                       sendDone(context, response);
                                     });
                                   } else
@@ -408,7 +407,6 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                 });
                               }
                             },
-                            child: Text('บันทึก'),
                           ),
                         ),
                       )
@@ -423,11 +421,10 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao.images[position];
+        var url = reportDao!.images[position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(
@@ -443,10 +440,10 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
   }
 
   Future getImage(index) async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(image!.path);
     setState(() {
-      _file[index] = image;
+      _file[index] = File(image.path);
     });
   }
 }

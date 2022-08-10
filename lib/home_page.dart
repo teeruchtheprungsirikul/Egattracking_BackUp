@@ -1,9 +1,6 @@
 import 'package:egattracking/dao/ProfileDao.dart';
-import 'package:egattracking/fragment/map_fragment.dart';
 import 'package:egattracking/fragment/report_fragment.dart';
 import 'package:egattracking/fragment/login_page.dart';
-import 'package:egattracking/fragment/history_fragment.dart';
-import 'package:egattracking/service/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

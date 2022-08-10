@@ -13,15 +13,12 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../main.dart';
 
 class AddReportForm25 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm25({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm25({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm25State createState() {
@@ -32,31 +29,31 @@ class AddReportForm25 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm25State extends State<AddReportForm25> {
-  ReportDao reportDao;
-  DateTime _timeChoose;
-  DateTime _dateChoose;
-  DateTime _timeChoose2;
-  DateTime _dateChoose2;
-  List<File> _file;
-  String dropdownTripValue;
-  String dropdownFixedValue;
+  late ReportDao? reportDao;
+  late DateTime _timeChoose;
+  late DateTime _dateChoose;
+  late DateTime _timeChoose2;
+  late DateTime _dateChoose2;
+  late List<File> _file;
+  late String dropdownTripValue;
+  late String dropdownFixedValue;
 
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm25State({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
+  MyCustomAddReportForm25State({ReportDao? reportDao}) {
+    this.reportDao = reportDao!;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
 
   List<String> topic = Topic.report25;
-  List<TextEditingController> mEditingController;
-  List<String> _problem;
+  late List<TextEditingController> mEditingController;
+  late List<String> _problem;
 
   @override
   void initState() {
@@ -65,36 +62,35 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
     _dateChoose = DateTime.now();
     _timeChoose2 = DateTime.now();
     _dateChoose2 = DateTime.now();
-    _problem = new List();
-    _file = List(4);
+    _problem = [];
+    _file = List<int>.filled(4, 0).cast<File>();
     dropdownTripValue = "เลือกทริป";
     dropdownFixedValue = "ดำเนินการทันที";
-    mEditingController = new List(topic.length);
+    List<int>.filled(topic.length, 0).cast<TextEditingController>();
+
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.name;
-    }else{
-      try{
-        if(initialText("problem").isNotEmpty){
-          _problem = initialText("problem").split(",");
+    } else {
+      try {
+        if (initialText("problem")!.isNotEmpty) {
+          _problem = initialText("problem")!.split(",");
           mEditingController[12].text = "";
         }
-      }catch(e){
-
-      }
+      } catch (e) {}
     }
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -159,16 +155,14 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<ProfileDao> snapshot) {
                                   if (snapshot.hasData) {
-                                    ProfileDao data = snapshot.data;
+                                    ProfileDao data = snapshot.data!;
                                     return FromUserSection(data.firstname,
-                                        data.team, snapshot.data.imageUrl);
+                                        data.team, snapshot.data!.imageUrl);
                                   }
                                   return Center(
-                                    child: Loading(
-                                        indicator:
-                                            BallSpinFadeLoaderIndicator(),
-                                        size: 40.0,
-                                        color: Colors.yellow),
+                                    child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(
+                                            Colors.yellow)),
                                   );
                                 }),
                             Padding(
@@ -188,7 +182,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -212,7 +206,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -236,7 +230,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -259,8 +253,12 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                         20.0, 20.0, 0.0, 0.0),
                                     child: SizedBox(
                                       width: double.infinity,
-                                      child: OutlineButton(
-                                        onPressed: () => {
+                                      child: OutlinedButton(
+                                        child: Text(
+                                          DateFormat("dd/MM/yyyy")
+                                              .format(_dateChoose),
+                                        ),
+                                        onPressed: () {
                                           DatePicker.showDatePicker(context,
                                               currentTime: _dateChoose,
                                               onConfirm: (time) {
@@ -269,16 +267,17 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th)
+                                              locale: LocaleType.th);
                                         },
-                                        textColor: Colors.black,
-                                        borderSide: BorderSide(
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          shape: StadiumBorder(),
+                                          side: BorderSide(
+                                            width: 2,
                                             color: Colors.grey,
-                                            width: 1.0,
-                                            style: BorderStyle.solid),
-                                        child: Text(
-                                          DateFormat("dd/MM/yyyy")
-                                              .format(_dateChoose),
+                                            style: BorderStyle.solid,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -290,8 +289,22 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                         0.0, 20.0, 20.0, 0.0),
                                     child: SizedBox(
                                       width: double.infinity,
-                                      child: OutlineButton(
-                                        onPressed: () => {
+                                      child: OutlinedButton(
+                                        child: Text(
+                                          DateFormat("HH:mm")
+                                              .format(_timeChoose),
+                                        ),
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          shape: StadiumBorder(),
+                                          side: BorderSide(
+                                            width: 2,
+                                            color: Colors.grey,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                        onPressed: () {
                                           DatePicker.showTimePicker(context,
                                               currentTime: _timeChoose,
                                               onConfirm: (time) {
@@ -300,21 +313,12 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th)
+                                              locale: LocaleType.th);
                                         },
-                                        textColor: Colors.black,
-                                        borderSide: BorderSide(
-                                            color: Colors.grey,
-                                            width: 1.0,
-                                            style: BorderStyle.solid),
-                                        child: Text(
-                                          DateFormat("HH:mm")
-                                              .format(_timeChoose),
-                                        ),
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             Padding(
@@ -325,9 +329,9 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   child: DropdownButton<String>(
                                     value: dropdownTripValue,
                                     elevation: 16,
-                                    onChanged: (String newValue) {
+                                    onChanged: (String? newValue) {
                                       setState(() {
-                                        dropdownTripValue = newValue;
+                                        dropdownTripValue = newValue!;
                                       });
                                     },
                                     items: <String>[
@@ -367,7 +371,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -390,7 +394,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -413,7 +417,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -436,7 +440,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -459,7 +463,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -482,7 +486,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -512,7 +516,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -535,8 +539,12 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                         20.0, 20.0, 0.0, 0.0),
                                     child: SizedBox(
                                       width: double.infinity,
-                                      child: OutlineButton(
-                                        onPressed: () => {
+                                      child: OutlinedButton(
+                                        child: Text(
+                                          DateFormat("dd/MM/yyyy")
+                                              .format(_dateChoose2),
+                                        ),
+                                        onPressed: () {
                                           DatePicker.showDatePicker(context,
                                               currentTime: _dateChoose2,
                                               onConfirm: (time) {
@@ -545,16 +553,17 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th)
+                                              locale: LocaleType.th);
                                         },
-                                        textColor: Colors.black,
-                                        borderSide: BorderSide(
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          shape: StadiumBorder(),
+                                          side: BorderSide(
+                                            width: 2,
                                             color: Colors.grey,
-                                            width: 1.0,
-                                            style: BorderStyle.solid),
-                                        child: Text(
-                                          DateFormat("dd/MM/yyyy")
-                                              .format(_dateChoose2),
+                                            style: BorderStyle.solid,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -566,8 +575,12 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                         0.0, 20.0, 20.0, 0.0),
                                     child: SizedBox(
                                       width: double.infinity,
-                                      child: OutlineButton(
-                                        onPressed: () => {
+                                      child: OutlinedButton(
+                                        child: Text(
+                                          DateFormat("HH:mm")
+                                              .format(_timeChoose2),
+                                        ),
+                                        onPressed: ()  {
                                           DatePicker.showTimePicker(context,
                                               currentTime: _timeChoose2,
                                               onConfirm: (time) {
@@ -576,17 +589,20 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th)
+                                              locale: LocaleType.th
+                                              );
                                         },
-                                        textColor: Colors.black,
-                                        borderSide: BorderSide(
+                                        style: OutlinedButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          shape: StadiumBorder(),
+                                          side: BorderSide(
+                                            width: 2,
                                             color: Colors.grey,
-                                            width: 1.0,
-                                            style: BorderStyle.solid),
-                                        child: Text(
-                                          DateFormat("HH:mm")
-                                              .format(_timeChoose2),
+                                            style: BorderStyle.solid,
+                                          ),
                                         ),
+                                        
                                       ),
                                     ),
                                   ),
@@ -616,7 +632,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -631,9 +647,9 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   child: DropdownButton<String>(
                                     value: dropdownFixedValue,
                                     elevation: 16,
-                                    onChanged: (String newValue) {
+                                    onChanged: (String? newValue) {
                                       setState(() {
-                                        dropdownFixedValue = newValue;
+                                        dropdownFixedValue = newValue!;
                                       });
                                     },
                                     items: <String>['ดำเนินการทันที', 'รอแก้ไข']
@@ -741,7 +757,10 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   for (var i = 0; i < _problem.length; i++)
                                     Chip(
                                       backgroundColor: Colors.amber,
-                                      label: Text(_problem[i],style: TextStyle(color: Colors.white),),
+                                      label: Text(
+                                        _problem[i],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       deleteIconColor: Colors.white,
                                       onDeleted: () {
                                         setState(() {
@@ -852,16 +871,18 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                       Flexible(
                         child: Padding(
                           padding: childPadding,
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.amberAccent,
+                          child: ElevatedButton(
+                            child: Text('บันทึก'),
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.amberAccent,
+                                textStyle: TextStyle(color: Colors.white)),
                             onPressed: () {
                               // Validate returns true if the form is valid, or false
                               // otherwise.
-                              if (_formKey.currentState.validate()) {
-                                List<Map> body = List();
+                              if (_formKey.currentState!.validate()) {
+                                List<Map> body = [];
                                 var towerNo = reportDao != null
-                                    ? reportDao.towerId
+                                    ? reportDao!.towerId
                                     : MyApp.tower.id;
                                 body.add({
                                   "key": "problem",
@@ -907,7 +928,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   "type": "string",
                                   "value": "แบบรายงานผลการตรวจสายขัดข้อง"
                                 });
-                                for (var i = 0; i < topic.length-1; i++) {
+                                for (var i = 0; i < topic.length - 1; i++) {
                                   body.add({
                                     "key": topic[i],
                                     "type": "string",
@@ -921,21 +942,19 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                           width: 40,
                                           height: 40,
                                           child: Center(
-                                            child: Loading(
-                                              indicator:
-                                                  BallSpinFadeLoaderIndicator(),
-                                              size: 40.0,
-                                              color: Colors.yellow,
-                                            ),
+                                            child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        Colors.yellow)),
                                           ),
                                         ));
                                 var oj = ObjectRequestSendReport(
-                                    body, "25", towerNo, reportDao);
+                                    body, "25", towerNo, reportDao!);
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code < 300) {
+                                  if (response.code! < 300) {
                                     AttachmentService.createAttachment(
-                                            _file, response.reportId)
-                                        .then((Attacresponse) {
+                                            _file, response.reportId!)
+                                        .then((attacresponse) {
                                       sendDone(context, response);
                                     });
                                   } else
@@ -943,7 +962,6 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                 });
                               }
                             },
-                            child: Text('บันทึก'),
                           ),
                         ),
                       )
@@ -961,7 +979,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao.images[position];
+        var url = reportDao!.images[position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(
@@ -977,7 +995,8 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
   }
 
   Future getImage(index) async {
-    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(image!.path);
     setState(() {
       _file[index] = File(image.path);
     });

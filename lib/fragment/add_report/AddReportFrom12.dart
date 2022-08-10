@@ -1,5 +1,4 @@
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:egattracking/main.dart';
@@ -8,16 +7,13 @@ import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm12 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm12({ReportDao? reportDao }) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm12({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm12State createState() {
@@ -28,44 +24,45 @@ class AddReportForm12 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
-
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
-  MyCustomAddReportForm12State({ReportDao? reportDao }) {
+  MyCustomAddReportForm12State({ReportDao? reportDao}) {
     this.reportDao = reportDao;
   }
 
-  Future<ProfileDao> _profile;
+  late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  List<TextEditingController> mEditingController;
+  late List<TextEditingController> mEditingController;
 
   List<String> topic = Topic.report12;
 
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController = new List(topic.length);
+    mEditingController =
+        List<int>.filled
+ (topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if(reportDao == null){
+    if (reportDao == null) {
       mEditingController[0].text = MyApp.tower.name;
       mEditingController[1].text = MyApp.tower.type;
     }
     super.initState();
   }
 
-  String initialText(String key) {
+  String? initialText(String key) {
     if (reportDao == null)
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -130,16 +127,14 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                           builder: (BuildContext context,
                               AsyncSnapshot<ProfileDao> snapshot) {
                             if (snapshot.hasData) {
-                              ProfileDao data = snapshot.data;
+                              ProfileDao data = snapshot.data!;
                               return FromUserSection(data.firstname, data.team,
-                                  snapshot.data.imageUrl);
+                                  snapshot.data!.imageUrl);
                             }
                             return Center(
-                              child: Loading(
-                                  indicator: BallSpinFadeLoaderIndicator(),
-                                  size: 40.0,
-                                  color: Colors.yellow),
-                            );
+                                child: CircularProgressIndicator(
+                                    valueColor:
+                                        AlwaysStoppedAnimation(Colors.yellow)));
                           }),
                       Padding(
                         padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
@@ -157,7 +152,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -180,7 +175,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -409,7 +404,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -436,7 +431,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                                   //fillColor: Colors.green
                                 ),
                                 validator: (val) {
-                                  if (val.length == 0)
+                                  if (val!.length == 0)
                                     return "โปรดกรอกข้อความ";
                                   else
                                     return null;
@@ -496,7 +491,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                             //fillColor: Colors.green
                           ),
                           validator: (val) {
-                            if (val.length == 0)
+                            if (val!.length == 0)
                               return "โปรดกรอกข้อความ";
                             else
                               return null;
@@ -579,16 +574,18 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                           Flexible(
                             child: Padding(
                               padding: childPadding,
-                              child: RaisedButton(
-                                textColor: Colors.white,
-                                color: Colors.amberAccent,
+                              child: ElevatedButton(
+                                child: Text('บันทึก'),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.amberAccent,
+                                    textStyle: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   // Validate returns true if the form is valid, or false
                                   // otherwise.
-                                  if (_formKey.currentState.validate()) {
-                                    List<Map> body = List();
+                                  if (_formKey.currentState!.validate()) {
+                                    List<Map> body = [];
                                     var towerNo = reportDao != null
-                                        ? reportDao.towerId
+                                        ? reportDao!.towerId
                                         : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
@@ -604,7 +601,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "12", towerNo, reportDao);
+                                        body, "12", towerNo, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,
@@ -612,20 +609,18 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                                               width: 40,
                                               height: 40,
                                               child: Center(
-                                                child: Loading(
-                                                  indicator:
-                                                      BallSpinFadeLoaderIndicator(),
-                                                  size: 40.0,
-                                                  color: Colors.yellow,
-                                                ),
+                                                child: CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            Colors.yellow))
                                               ),
                                             ));
                                     SendReportUseCase.serReport(oj, (response) {
-                                     sentAttechment(response);
+                                      sentAttechment(response);
                                     });
                                   }
                                 },
-                                child: Text('บันทึก'),
+                                
                               ),
                             ),
                           )

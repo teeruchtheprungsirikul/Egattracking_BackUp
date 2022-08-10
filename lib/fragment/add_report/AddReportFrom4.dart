@@ -1,9 +1,6 @@
 import 'package:egattracking/Topic.dart';
-import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
-import 'package:egattracking/home_page.dart';
-import 'package:egattracking/service/ReportService.dart';
 import 'package:egattracking/service/UserService.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +11,9 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm4 extends StatefulWidget {
-  var reportDao;
+  final reportDao;
 
-  AddReportForm4({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
-  }
+  AddReportForm4({Key? key, this.reportDao}) : super(key: key); 
 
   @override
   MyCustomAddReportForm4State createState() {
@@ -47,7 +42,8 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List.filled(topic.length + 1, 0).cast<TextEditingController>();
+        List<int>.filled
+ (topic.length + 1, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length + 1; i++) {
       mEditingController[i] = (i == topic.length)
           ? TextEditingController(text: "")

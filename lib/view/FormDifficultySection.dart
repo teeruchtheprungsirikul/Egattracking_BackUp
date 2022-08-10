@@ -2,9 +2,11 @@ import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:flutter/material.dart';
 
-class FormDifficultySection extends StatelessWidget {
-  late ReportDao  reportDao;
 
+// ignore: must_be_immutable
+class FormDifficultySection extends StatelessWidget {
+  ReportDao? reportDao;
+  
   FormDifficultySection(ReportDao mReportDao) {
     reportDao = mReportDao;
   }
@@ -291,7 +293,7 @@ class FormDifficultySection extends StatelessWidget {
       return "";
     else {
       try {
-        return reportDao.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }

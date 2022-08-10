@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cross_file/src/types/interface.dart';
 import 'package:dio/dio.dart';
 import 'package:egattracking/dao/LogInDao.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
