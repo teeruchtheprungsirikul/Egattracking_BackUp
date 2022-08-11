@@ -5,7 +5,7 @@ import 'dart:ui';
 
 class LoginPage extends StatefulWidget {
   final ValueChanged<bool> loginTriggeredAction;
-  const LoginPage({Key? key, required this.loginTriggeredAction}) : super(key: key);
+  LoginPage({Key? key, required this.loginTriggeredAction}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
