@@ -30,19 +30,23 @@ dependencies:
   http: ^0.13.4
   intl: ^0.17.0
   shared_preferences: ^2.0.15
-  flutter_datetime_picker: ^1.5.1
+  flutter_datetime_picker: # Update to CupertinoDatePicker
+    git:
+      url: https://github.com/AlexHartford/flutter_datetime_picker.git
+      ref: master
   image_picker: ^0.8.5+3
-  geolocator: ^8.2.1
+  geolocator: ^8.2.1 
   url_launcher: ^6.1.4
   flutter_phoenix: ^1.0.0
   flutter_launcher_icons: ^0.9.3
   meta: ^1.7.0
-  flutter_secure_storage: ^4.2.0
+  flutter_secure_storage: ^4.2.1
   jwt_decode: ^0.3.1
   flutter_easyloading: ^3.0.0
   
   flutter:
     sdk: flutter
+  
   
   
   

@@ -157,7 +157,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                   if (snapshot.hasData) {
                                     ProfileDao data = snapshot.data!;
                                     return FromUserSection(data.firstname,
-                                        data.team, snapshot.data!.imageUrl);
+                                        data.team, snapshot.data!.imageUrl!);
                                   }
                                   return Center(
                                     child: CircularProgressIndicator(

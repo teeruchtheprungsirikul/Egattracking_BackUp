@@ -12,7 +12,7 @@ import 'dart:core';
 class ProfileFragment extends StatefulWidget {
   final ValueChanged<bool> logoutTriggeredAction;
 
-  const ProfileFragment({Key? key, required this.logoutTriggeredAction})
+  ProfileFragment({Key? key, required this.logoutTriggeredAction})
       : super(key: key);
 
   @override
@@ -20,12 +20,16 @@ class ProfileFragment extends StatefulWidget {
 }
 
 class _ProfileFragmentState extends State<ProfileFragment> {
-  late Future<ProfileDao> _profile;
-  late File? _image;
+  Future<ProfileDao>? _profile;
+  File? _image;
 
-  getImage() async {
-    final File? image =
-        (await ImagePicker().pickImage(source: ImageSource.gallery)) as File;
+  Future getImage() async {
+    var image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+  
+  setState(() {
+  _image = File(image!.path); // won't have any error now
+});
 
     if (image != null) {
       showDialog(
@@ -46,9 +50,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   ],
                 ),
               )));
-      UserService.uploadImage(image).then((response) {
+      UserService.uploadImage(File(image.path)).then((response) {
         setState(() {
-          _image = image;
+          _image = File(image.path);
           Navigator.pop(context, true);
         });
       });
@@ -65,7 +69,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
         backgroundColor: Colors.white,
@@ -122,7 +126,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 height: 190.0,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.0),
-                  child: setImage(profile.imageUrl),
+                  child: setImage(profile.imageUrl!),
                 ),
               ),
               Positioned(

@@ -39,7 +39,7 @@ import 'add_report/AddReportFrom25.dart';
 class ReportFragment extends StatefulWidget {
   final ValueChanged<bool> logoutTriggeredAction;
 
-  const ReportFragment({Key? key, required this.logoutTriggeredAction})
+  ReportFragment({Key? key, required this.logoutTriggeredAction})
       : super(key: key);
 
   @override
@@ -57,7 +57,7 @@ class MyCustomFormState extends State<ReportFragment> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
-  late Future<ProfileDao> _profile;
+  Future<ProfileDao>? _profile;
   Single? _single = MyApp.mfactory.newInstant();
 
   @override
@@ -103,340 +103,340 @@ class MyCustomFormState extends State<ReportFragment> {
     ];
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
-                      child: Text(
-                        "ผู้บันทึก",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
-                    FutureBuilder(
-                        future: _profile,
-                        builder: (BuildContext? mContext,
-                            AsyncSnapshot<ProfileDao> snapshot) {
-                          if (snapshot.hasData) {
-                            ProfileDao data = snapshot.data!;
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  20.0, 8.0, 0.0, 0.0),
-                              child: Text(data.firstname,
-                                  style: TextStyle(color: Colors.grey)),
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            UserService.logout();
-                            if (mContext != null) {
-                              Phoenix.rebirth(mContext);
-                            } else if (context != null) {
-                              Phoenix.rebirth(context);
-                            } else {
-                              exit(0);
-                            }
-                          }
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                CircularProgressIndicator(
-                                  backgroundColor: Colors.blueGrey,
-                                  valueColor: AlwaysStoppedAnimation(
-                                      Colors.amberAccent),
-                                  strokeWidth: 8.0,
-                                ),
-                              ],
-                            ),
-                          );
-                        })
-                  ],
-                ),
-                Flexible(
-                  child: Container(
-                      alignment: AlignmentDirectional.centerEnd,
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.person),
-                              onPressed: () {
-                                Navigator.push(
-                                    context!,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileFragment(
-                                            logoutTriggeredAction:
-                                                widget.logoutTriggeredAction)));
-                              }),
-                          IconButton(
-                              icon: Icon(Icons.history),
-                              onPressed: () {
-                                Navigator.push(
-                                    context!,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            HistoryFragment()));
-                              }),
-                          IconButton(
-                              icon: ImageIcon(AssetImage("assets/ruler.png")),
-                              onPressed: () {
-                                if (Platform.isIOS) {
-                                  try {
-                                    launchUrl(Uri.parse(
-                                        "https://support.apple.com/th-th/HT208924"));
-                                  } catch (e) {}
-                                } else {
-                                  launchUrl(Uri.parse(
-                                      "https://play.google.com/store/apps/details?id=kr.sira.measure"));
-                                }
-                              })
-                        ],
-                      )),
-                )
-              ],
-            ),
-            Divider(color: Colors.grey),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                  textStyle: TextStyle(color: Colors.black),
-                  side: BorderSide(
-                      color: Colors.grey, 
-                      width: 2.0, 
-                      style: BorderStyle.solid
-                    ),
-                ),
-                onPressed: goToMap,
-                child: Text(_single!.nameTower),
-              ),
-            ),
-            Expanded(
-                child: ListView.builder(
-              itemCount: menu.length,
-              itemBuilder: (context, position) {
-                switch (position) {
-                  case 0:
-                  case 10:
-                  case 22:
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
-                          child: Text(menu[position],
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  backgroundColor: Colors.amberAccent)),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
+                        child: Text(
+                          "ผู้บันทึก",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Divider(color: Colors.grey)
-                      ],
-                    );
-                  default:
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            if (_single!.nameTower == "โปรดเลือกเสา")
-                              goToMap();
-                            else {
-                              switch (position) {
-                                case 1:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm1()));
-                                  break;
-                                case 2:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm2()));
-                                  break;
-                                case 3:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm3()));
-                                  break;
-                                case 4:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm4()));
-                                  break;
-                                case 5:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm5()));
-                                  break;
-                                case 6:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm6()));
-                                  break;
-                                case 7:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm7()));
-                                  break;
-                                case 8:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm8()));
-                                  break;
-                                case 9:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm9()));
-                                  break;
-                                case 11:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm10()));
-                                  break;
-                                case 12:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm11()));
-                                  break;
-                                case 13:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm12()));
-                                  break;
-                                case 14:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm13()));
-                                  break;
-                                case 15:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm14()));
-                                  break;
-                                case 16:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm15()));
-                                  break;
-                                case 17:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm16()));
-                                  break;
-                                case 18:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm17()));
-                                  break;
-                                case 19:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm18()));
-                                  break;
-                                case 20:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm19()));
-                                  break;
-                                case 21:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm20()));
-                                  break;
-                                case 23:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm23()));
-                                  break;
-                                case 24:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm24()));
-                                  break;
-                                case 25:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddReportForm25()));
-                                  break;
+                      ),
+                      FutureBuilder(
+                          future: _profile,
+                          builder: (BuildContext? mContext,
+                              AsyncSnapshot<ProfileDao> snapshot) {
+                            if (snapshot.hasData) {
+                              ProfileDao data = snapshot.data!;
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 8.0, 0.0, 0.0),
+                                child: Text(data.firstname,
+                                    style: TextStyle(color: Colors.grey)),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              UserService.logout();
+                              if (mContext != null) {
+                                Phoenix.rebirth(mContext);
+                              } else if (context != null) {
+                                Phoenix.rebirth(context);
+                              } else {
+                                exit(0);
                               }
                             }
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(40, 8, 20, 0),
-                              child: Text(menu[position],
-                                  style: TextStyle(fontSize: 14.0)),
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  CircularProgressIndicator(
+                                    backgroundColor: Colors.blueGrey,
+                                    valueColor: AlwaysStoppedAnimation(
+                                        Colors.amberAccent),
+                                    strokeWidth: 8.0,
+                                  ),
+                                ],
+                              ),
+                            );
+                          })
+                    ],
+                  ),
+                  Flexible(
+                    child: Container(
+                        alignment: AlignmentDirectional.centerEnd,
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(Icons.person),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context!,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileFragment(
+                                              logoutTriggeredAction:
+                                                  widget.logoutTriggeredAction)));
+                                }),
+                            IconButton(
+                                icon: Icon(Icons.history),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context!,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HistoryFragment()));
+                                }),
+                            IconButton(
+                                icon: ImageIcon(AssetImage("assets/ruler.png")),
+                                onPressed: () {
+                                  if (Platform.isIOS) {
+                                    try {
+                                      launchUrl(Uri.parse(
+                                          "https://support.apple.com/th-th/HT208924"));
+                                    } catch (e) {}
+                                  } else {
+                                    launchUrl(Uri.parse(
+                                        "https://play.google.com/store/apps/details?id=kr.sira.measure"));
+                                  }
+                                })
+                          ],
+                        )),
+                  )
+                ],
+              ),
+              Divider(color: Colors.grey),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                    textStyle: TextStyle(color: Colors.black),
+                    side: BorderSide(
+                        color: Colors.grey, 
+                        width: 2.0, 
+                        style: BorderStyle.solid
+                      ),
+                  ),
+                  onPressed: goToMap,
+                  child: Text(_single!.nameTower),
+                ),
+              ),
+              Expanded(
+                  child: ListView.builder(
+                itemCount: menu.length,
+                itemBuilder: (context, position) {
+                  switch (position) {
+                    case 0:
+                    case 10:
+                    case 22:
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
+                            child: Text(menu[position],
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    backgroundColor: Colors.amberAccent)),
+                          ),
+                          Divider(color: Colors.grey)
+                        ],
+                      );
+                    default:
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              if (_single!.nameTower == "โปรดเลือกเสา")
+                                goToMap();
+                              else {
+                                switch (position) {
+                                  case 1:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm1()));
+                                    break;
+                                  case 2:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm2()));
+                                    break;
+                                  case 3:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm3()));
+                                    break;
+                                  case 4:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm4()));
+                                    break;
+                                  case 5:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm5()));
+                                    break;
+                                  case 6:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm6()));
+                                    break;
+                                  case 7:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm7()));
+                                    break;
+                                  case 8:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm8()));
+                                    break;
+                                  case 9:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm9()));
+                                    break;
+                                  case 11:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm10()));
+                                    break;
+                                  case 12:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm11()));
+                                    break;
+                                  case 13:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm12()));
+                                    break;
+                                  case 14:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm13()));
+                                    break;
+                                  case 15:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm14()));
+                                    break;
+                                  case 16:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm15()));
+                                    break;
+                                  case 17:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm16()));
+                                    break;
+                                  case 18:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm17()));
+                                    break;
+                                  case 19:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm18()));
+                                    break;
+                                  case 20:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm19()));
+                                    break;
+                                  case 21:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm20()));
+                                    break;
+                                  case 23:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm23()));
+                                    break;
+                                  case 24:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm24()));
+                                    break;
+                                  case 25:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddReportForm25()));
+                                    break;
+                                }
+                              }
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(40, 8, 20, 0),
+                                child: Text(menu[position],
+                                    style: TextStyle(fontSize: 14.0)),
+                              ),
                             ),
                           ),
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                          height: 8,
-                        )
-                      ],
-                    );
-                }
-              },
-            )),
-          ],
-        ),
+                          Divider(
+                            color: Colors.grey,
+                            height: 8,
+                          )
+                        ],
+                      );
+                  }
+                },
+              )),
+            ],
+          ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -116,7 +116,7 @@ class MyCustomAddReportForm20State extends BaseStatefulState<AddReportForm20> {
                               return FromUserSection(
                                   data.firstname,
                                   data.team,
-                                  snapshot.data!.imageUrl);
+                                  snapshot.data!.imageUrl!);
                             }
                              return Center(
                                 child: CircularProgressIndicator(

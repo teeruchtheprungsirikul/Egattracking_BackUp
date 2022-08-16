@@ -65,18 +65,18 @@ class UserService {
   static Future<ProfileDao> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await MyApp.dio.get(
-        Repository.profile(prefs.getString('keyuserid')!),
+        Repository.profile(prefs.getString(keyuserid)!),
         options: Options(headers: {
           "Authorization": "Bearer ${prefs.getString(keyaccesstoken)}"
         }));
-    if(response.statusCode! > 300){
+    if(response.statusCode! < 300){
       var refresh = await refreshToken();
       var responseNew = await MyApp.dio.get(
           Repository.profile(prefs.getString(keyuserid)!),
           options: Options(headers: {
             "Authorization": "Bearer ${refresh.accessToken}"
           }));
-      return ProfileDao.fromJson(responseNew.data);
+      return ProfileDao.fromJson(responseNew. data);
     }else return ProfileDao.fromJson(response.data);
   }
 

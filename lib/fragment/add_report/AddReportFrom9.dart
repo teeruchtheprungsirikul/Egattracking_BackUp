@@ -128,7 +128,7 @@ class MyCustomAddReportForm9State extends BaseStatefulState<AddReportForm9> {
                             if (snapshot.hasData) {
                               ProfileDao data = snapshot.data!;
                               return FromUserSection(data.firstname, data.team,
-                                  snapshot.data!.imageUrl);
+                                  snapshot.data!.imageUrl!);
                             }
                             return Center(
                               child: CircularProgressIndicator(

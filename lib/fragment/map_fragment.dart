@@ -12,9 +12,14 @@ class MapFragment extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapFragment> {
-  Completer<GoogleMapController> _controller = Completer();
+  // Completer<GoogleMapController> _controller = Completer();
   Set<Marker> markers = Set();
   late BitmapDescriptor myIcon;
+  late Position userLocation;
+  late GoogleMapController mapController;
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   void initState() {
@@ -28,20 +33,23 @@ class MapSampleState extends State<MapFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(title: Text("เลือกเสา")),
       body: FutureBuilder(
-          future: Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high),
+        future: _getLocation(),
+          // future: Geolocator.getCurrentPosition(
+          //     desiredAccuracy: LocationAccuracy.high),
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
               LatLng latlang;
               Position position = snapshot.data as Position;
               latlang = LatLng(position.latitude, position.longitude);
               CameraPosition kGooglePlex = CameraPosition(
-                target: latlang,
-                zoom: 14.4746,
-              );
+                  target: latlang, zoom: 15);
+              // CameraPosition(
+              //   target: latlang,
+              //   zoom: 14.4746,
+              // );
 
               return FutureBuilder(
                 future: TowerService.getTowerInRang(
@@ -65,9 +73,10 @@ class MapSampleState extends State<MapFragment> {
                     return GoogleMap(
                       mapType: MapType.normal,
                       initialCameraPosition: kGooglePlex,
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
+                      onMapCreated: _onMapCreated,
+                      // (GoogleMapController controller) {
+                      //   _controller.complete(controller);
+                      // },
                       markers: markers,
                       myLocationEnabled: true,
                     );
@@ -100,6 +109,50 @@ class MapSampleState extends State<MapFragment> {
                       ),
                     );
           }),
+          floatingActionButton:FloatingActionButton.extended(
+            onPressed: () {
+              mapController.animateCamera(CameraUpdate.newLatLngZoom(
+                LatLng(userLocation.latitude, userLocation.longitude),18));
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text(
+                      'Your location has been send !\nlat: ${userLocation.latitude} long: ${userLocation.longitude}'
+                    ),
+                  );
+                }
+              );
+            }, 
+            label: Text("Send Location"),
+            icon: Icon(Icons.near_me),
+          ),
     );
+  }
+
+   Future<Position> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location permissions are denied');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanetly denied, we cannot request permissions.');
+    }
+
+    userLocation = await Geolocator.getCurrentPosition();
+    return userLocation;
   }
 }

@@ -1,17 +1,17 @@
 class ProfileDao {
-  String createdOn;
-  bool deleted;
+  String? createdOn;
+  bool? deleted;
   String email;
   String firstname;
   String id;
-  String lastLogin;
+  String? lastLogin;
   String lastname;
-  String modifiedOn;
+  String? modifiedOn;
   String refreshToken;
   String role;
   String team;
   String username;
-  String imageUrl;
+  String? imageUrl;
 
   ProfileDao(
       {required this.createdOn,
@@ -45,7 +45,7 @@ class ProfileDao {
   
   );
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['created_on'] = this.createdOn;
     data['deleted'] = this.deleted;
     data['email'] = this.email;
