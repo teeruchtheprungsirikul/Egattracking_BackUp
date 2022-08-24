@@ -54,8 +54,7 @@ class MyCustomAddReportForm11State extends BaseStatefulState<AddReportForm11> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List<int>.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));

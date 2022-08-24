@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'dart:io';
-
 import 'package:egattracking/dao/PostReportDao.dart';
 import 'package:egattracking/dao/ReportDao.dart';
 import 'package:egattracking/service/AttachmentService.dart';
@@ -10,11 +9,16 @@ import 'package:image_picker/image_picker.dart';
 abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   // List<File> file = factory as List<File>;
   // filled(length, fill, {bool growable = false});
-
-  List<File> file = List<int>.filled
- (2,0,).cast<File>();
+  //List file = List.filled(2, 0);
+  //List<File> file = List.filled(2,0,).cast<File>();
   //List<int> file = List<int>.filled(2, 0);
-  late ReportDao? reportDao;
+  File? _selectedImageFile1;
+  File? _selectedImageFile2;
+  //List<File> file = []..length = 2;
+  //List file = List.filled(2, 0);
+
+  //late reportDao
+  ReportDao? reportDao;
   String urgent = "ไม่เร่งด่วน";
 
   Widget imageSection() {
@@ -31,12 +35,12 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
               child: Material(
                   child: InkWell(
                 onTap: () {
-                  getImage(0);
+                  getImage1();
                 },
                 child: Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: prepareImage(file[0], 0),
+                    child: prepareImage(_selectedImageFile1, 0),
                   ),
                 ),
               ))),
@@ -45,43 +49,47 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
               child: Material(
                   child: InkWell(
                 onTap: () {
-                  getImage(1);
+                  getImage2();
                 },
                 child: Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: prepareImage(file[1], 1),
+                    child: prepareImage(_selectedImageFile2, 1),
                   ),
                 ),
               ))),
-              Container(
-              padding: const EdgeInsets.all(8),
-              child: Material(
-                  child: InkWell(
-                onTap: () {
-                  getImage(2);
-                },
-                child: Container(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: prepareImage(file[2], 2),
-                  ),
-                ),
-              )))
         ]);
   }
 
-  Future getImage(index) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    print(image!.path);
+  getImage1() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
     setState(() {
-      file[index] = File(image.path);
+      _selectedImageFile1 = File(selectedFile.path);
+    });
+  }
+
+  getImage2() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
+    setState(() {
+      _selectedImageFile2 = File(selectedFile.path);
     });
   }
 
   void sentAttechment(PostReportDao response) {
     if (response.code! < 300) {
-      AttachmentService.createAttachment(file, response.reportId!)
+      AttachmentService.createAttachment(
+              _selectedImageFile1, response.reportId!)
+          .then((attacresponse) {
+        sendDone(context, response);
+      });
+    }
+    if (response.code! < 300) {
+      AttachmentService.createAttachment(
+              _selectedImageFile2, response.reportId!)
           .then((attacresponse) {
         sendDone(context, response);
       });
@@ -118,20 +126,20 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
         ));
   }
 
-  Widget prepareImage(file, int position) {
-    if (file == null) {
+  Widget prepareImage(_selectedImageFile, int position) {
+    if (_selectedImageFile != null) {
       try {
         var url = reportDao!.images[position];
         return Image.network(url);
       } catch (e) {
-        return Image.asset(
-          "assets/placeholder.png",
+        return Image.file(
+          _selectedImageFile!,
           fit: BoxFit.fitHeight,
         );
       }
     } else
-      return Image.file(
-        file,
+      return Image.asset(
+        "assets/placeholder.png",
         fit: BoxFit.fitHeight,
       );
   }

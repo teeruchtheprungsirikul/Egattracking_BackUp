@@ -13,7 +13,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm4 extends StatefulWidget {
   final reportDao;
 
-  AddReportForm4({Key? key, this.reportDao}) : super(key: key); 
+  AddReportForm4({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm4State createState() {
@@ -42,8 +42,7 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length + 1, 0).cast<TextEditingController>();
+        List<int>.filled(topic.length + 1, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length + 1; i++) {
       mEditingController[i] = (i == topic.length)
           ? TextEditingController(text: "")

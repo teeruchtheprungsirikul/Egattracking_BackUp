@@ -39,7 +39,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm24State({ReportDao? reportDao}) {
-    this.reportDao = reportDao!;
+    this.reportDao = reportDao;
   }
 
   late Future<ProfileDao> _profile;
@@ -185,8 +185,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                       });
                                     },
                                         showTitleActions: true,
-                                        locale: LocaleType.th
-                                      );
+                                        locale: LocaleType.th);
                                   },
                                   style: OutlinedButton.styleFrom(
                                     textStyle: TextStyle(color: Colors.black),

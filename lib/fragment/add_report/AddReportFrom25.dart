@@ -44,7 +44,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm25State({ReportDao? reportDao}) {
-    this.reportDao = reportDao!;
+    this.reportDao = reportDao;
   }
 
   late Future<ProfileDao> _profile;
@@ -274,8 +274,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2.0
- ,
+                                            width: 2.0,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -300,8 +299,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2.0
- ,
+                                            width: 2.0,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -562,8 +560,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2.0
- ,
+                                            width: 2.0,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
@@ -583,7 +580,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                           DateFormat("HH:mm")
                                               .format(_timeChoose2),
                                         ),
-                                        onPressed: ()  {
+                                        onPressed: () {
                                           DatePicker.showTimePicker(context,
                                               currentTime: _timeChoose2,
                                               onConfirm: (time) {
@@ -592,21 +589,18 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th
-                                              );
+                                              locale: LocaleType.th);
                                         },
                                         style: OutlinedButton.styleFrom(
                                           textStyle:
                                               TextStyle(color: Colors.black),
                                           shape: StadiumBorder(),
                                           side: BorderSide(
-                                            width: 2.0
- ,
+                                            width: 2.0,
                                             color: Colors.grey,
                                             style: BorderStyle.solid,
                                           ),
                                         ),
-                                        
                                       ),
                                     ),
                                   ),

@@ -44,8 +44,7 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List<int>.filled(topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
@@ -609,18 +608,16 @@ class MyCustomAddReportForm12State extends BaseStatefulState<AddReportForm12> {
                                               width: 40,
                                               height: 40,
                                               child: Center(
-                                                child: CircularProgressIndicator(
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation(
-                                                            Colors.yellow))
-                                              ),
+                                                  child: CircularProgressIndicator(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation(
+                                                              Colors.yellow))),
                                             ));
                                     SendReportUseCase.serReport(oj, (response) {
                                       sentAttechment(response);
                                     });
                                   }
                                 },
-                                
                               ),
                             ),
                           )

@@ -12,10 +12,10 @@ import '../../main.dart';
 import '../BaseStatefulState.dart';
 
 class AddReportForm2 extends StatefulWidget {
-  final reportDao;
+  final ReportDao? reportDao;
   AddReportForm2({Key? key, this.reportDao}) : super(key: key);
 
-  //AddReportForm2({ReportDao? reportDao}) {this.reportDao = reportDao;}
+  //AddReportForm2({reportDao? reportDao}) {this.reportDao = reportDao;}
 
   @override
   MyCustomAddReportForm2State createState() {

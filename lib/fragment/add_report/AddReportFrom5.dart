@@ -11,14 +11,22 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm5 extends StatefulWidget {
-  final reportDao;
+  final reportDao
+ 
+ ;
 
-  AddReportForm5({Key? key, this.reportDao}) : super(key: key); 
+  AddReportForm5({Key? key, this.reportDao
+ 
+ }) : super(key: key); 
     
 
   @override
   MyCustomAddReportForm5State createState() {
-    return MyCustomAddReportForm5State(reportDao: reportDao);
+    return MyCustomAddReportForm5State(reportDao
+ 
+ : reportDao
+ 
+ );
   }
 }
 
@@ -31,8 +39,9 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm5State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = reportDao!;
   }
+  
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
@@ -50,7 +59,9 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao
+ 
+  == null) {
       mEditingController[0].text = MyApp.tower.name;
       mEditingController[1].text = MyApp.tower.type;
     }
@@ -58,11 +69,15 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
   }
 
   String? initialText(String key) {
-    if (reportDao == null)
+    if (reportDao
+ 
+  == null)
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao
+ 
+ !.values.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -663,8 +678,12 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                    var towerNo = reportDao
+ 
+  != null
+                                        ? reportDao
+ 
+ !.towerId
                                         : MyApp.tower.id;
                                     body.add({
                                       "key": "name",
@@ -680,7 +699,9 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "5", towerNo, reportDao!);
+                                        body, "5", towerNo, reportDao
+ 
+ !);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,

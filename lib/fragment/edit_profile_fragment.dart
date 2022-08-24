@@ -66,7 +66,8 @@ class _EditProfileFragmentState extends State<EditProfileFragment> {
                           Icons.camera_alt,
                           color: Colors.black,
                         ),
-                        onPressed: getImage),
+                        onPressed: getImage()
+                    ),
                   ],
                 ),
               )

@@ -1,3 +1,4 @@
+
 import 'package:egattracking/Single.dart';
 import 'package:egattracking/Topic.dart';
 import 'package:egattracking/dao/ProfileDao.dart';
@@ -8,14 +9,13 @@ import 'package:egattracking/view/FormDifficultySection.dart';
 import 'package:egattracking/view/FormUserSection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../main.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm1 extends StatefulWidget {
-  final reportDao;
+  final ReportDao? reportDao;
   AddReportForm1({Key? key, this.reportDao}) : super(key: key);
-  // AddReportForm1({ReportDao? reportDao});
+  // AddReportForm1({reportDao? reportDao});
 
   @override
   MyCustomAddReportForm1State createState() {
@@ -33,7 +33,8 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm1State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    //this.reportDao = reportDao;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
 
   late Future<ProfileDao> _profile;
@@ -49,13 +50,15 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
+//     mEditingController =
+//         List<int>.filled
+//  (topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (this.reportDao == null) {
+    if (this.reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower.name;
       mEditingController[1].text = MyApp.tower.type;
     }

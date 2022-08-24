@@ -13,9 +13,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm6 extends StatefulWidget {
   final reportDao;
 
-  AddReportForm6({Key? key, this.reportDao}) : super(key: key); 
-    
-  
+  AddReportForm6({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm6State createState() {
@@ -32,7 +30,7 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm6State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = reportDao!;
   }
 
   late Future<ProfileDao> _profile;
@@ -46,8 +44,10 @@ class MyCustomAddReportForm6State extends BaseStatefulState<AddReportForm6> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
+//     mEditingController =
+//         List<int>.filled
+//  (topic.length, 0).cast<TextEditingController>();
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));

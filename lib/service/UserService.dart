@@ -76,7 +76,7 @@ class UserService {
           options: Options(headers: {
             "Authorization": "Bearer ${refresh.accessToken}"
           }));
-      return ProfileDao.fromJson(responseNew. data);
+      return ProfileDao.fromJson(responseNew.data);
     }else return ProfileDao.fromJson(response.data);
   }
 

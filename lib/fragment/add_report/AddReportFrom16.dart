@@ -43,8 +43,7 @@ class MyCustomAddReportForm16State extends BaseStatefulState<AddReportForm16> {
   @override
   void initState() {
     _profile = UserService.getProfile();
-    List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+    List<int>.filled(topic.length, 0).cast<TextEditingController>();
 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =

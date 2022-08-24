@@ -1,4 +1,8 @@
-import 'dart:io';
+
+
+
+
+
 
 import 'package:dio/dio.dart';
 import 'package:egattracking/dao/AttachmentCreateDao.dart';
@@ -11,7 +15,7 @@ import 'UserService.dart';
 
 class AttachmentService {
   static Future<List<AttachmentCreateDao>> createAttachment(
-      List<File?> files, String reportId) async {
+       var files, String reportId) async {
     print("call attachment");
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

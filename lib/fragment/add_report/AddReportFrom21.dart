@@ -42,8 +42,7 @@ class MyCustomAddReportForm21State extends BaseStatefulState<AddReportForm21> {
   @override
   void initState() {
     _profile = UserService.getProfile();
-    List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+    List<int>.filled(topic.length, 0).cast<TextEditingController>();
 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
@@ -70,8 +69,7 @@ class MyCustomAddReportForm21State extends BaseStatefulState<AddReportForm21> {
     DateTime now = DateTime.now();
     String today = DateFormat.yMd().format(now);
     String time = DateFormat.Hm().format(now);
-    List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+    List<int>.filled(topic.length, 0).cast<TextEditingController>();
 
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
