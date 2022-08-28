@@ -5,20 +5,22 @@ import 'package:egattracking/service/ReportService.dart';
 
 class SendReportUseCase {
   static void serReport(ObjectRequestSendReport ob, Function(PostReportDao) f) {
-    if(ob.reportDao == null) {
+    if(ob.reportDao!.id == "") {
       ReportService.sendReport(
-          ob.body, ob.type, ob.towerNo).then(f);
+          ob.body!, ob.type!, ob.towerNo!).then(f);
     }else {
-      ReportService.editReport(ob.body, ob.type, ob.towerNo, ob.reportDao!.id).then(f);
+      ReportService.editReport(ob.body!, ob.type!, ob.towerNo!, ob.reportDao!.id!).then(f);
     }
   }
 }
 
 class ObjectRequestSendReport {
-  late List<Map> body;
-  late String type;
-  late String towerNo;
-  late ReportDao? reportDao;
+  List<Map>? body;
+  String? type;
+  String?towerNo;
+  ReportDao? reportDao;
+
+
 
   ObjectRequestSendReport(List<Map> body,
       String type,
@@ -29,10 +31,10 @@ class ObjectRequestSendReport {
     this.towerNo = towerNo;
     this.reportDao = reportDao;
     try{
-      this.body.add({
+      this.body!.add({
         "key": "wire_detail",
         "type": "string",
-        "value": "${MyApp.tower.name}:${MyApp.tower.type}"
+        "value": "${MyApp.tower!.name}:${MyApp.tower!.type}"
       });
     }catch(error){
 

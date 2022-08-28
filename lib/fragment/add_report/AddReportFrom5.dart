@@ -62,8 +62,8 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
     if (reportDao
  
   == null) {
-      mEditingController[0].text = MyApp.tower.name;
-      mEditingController[1].text = MyApp.tower.type;
+      mEditingController[0].text = MyApp.tower!.name;
+      mEditingController[1].text = MyApp.tower!.type;
     }
     super.initState();
   }
@@ -77,7 +77,7 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
       try {
         return reportDao
  
- !.values.firstWhere((it) => it.key == key).value;
+ !.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -684,7 +684,7 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
                                         ? reportDao
  
  !.towerId
-                                        : MyApp.tower.id;
+                                        : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -699,7 +699,7 @@ class MyCustomAddReportForm5State extends BaseStatefulState<AddReportForm5> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "5", towerNo, reportDao
+                                        body, "5", towerNo!, reportDao
  
  !);
                                     showDialog(

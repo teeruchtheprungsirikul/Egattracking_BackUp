@@ -48,7 +48,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
   String getOrDefault(ReportDao reports,String  key){
     String a;
     try{
-      a = reports.values.firstWhere((it) => it.key == key).value!;
+      a = reports.values!.firstWhere((it) => it.key == key).value!;
     }catch( exception ){
       a = "empty";
     }
@@ -58,7 +58,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
   String getWire(ReportDao reports,int index){
     String a;
     try{
-      a = reports.values.firstWhere((it) => it.key == "wire_detail").value!;
+      a = reports.values!.firstWhere((it) => it.key == "wire_detail").value!;
       a = a.split(":")[index];
       return a;
     }catch(e){
@@ -146,7 +146,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                                     ),
                                   ),
                                   Text(
-                                    '${DateFormat('yyyy/MM/dd').format(reports[index].modifiedOn)}',
+                                    '${DateFormat('yyyy/MM/dd').format(reports[index].modifiedOn!)}',
                                     style: TextStyle(
                                         fontSize: 12.0,
                                         color: Colors.grey,
@@ -162,7 +162,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                                     ),
                                   ),
                                   Text(
-                                    '${DateFormat.Hms().format(reports[index].modifiedOn)}',
+                                    '${DateFormat.Hms().format(reports[index].modifiedOn!)}',
                                     style: TextStyle(
                                         fontSize: 12.0,
                                         color: Colors.grey,
@@ -241,7 +241,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
       break;
     }
   }
-  List<String> yearDropDownValues = <String>['2019', '2018', '2017', '2016'];
+  List<String> yearDropDownValues = <String>['2022','2021','2020','2019', '2018', '2017', '2016'];
   List<String> monthDropDownValues = <String>[
     'Jan',
     'Feb',

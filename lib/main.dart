@@ -1,10 +1,10 @@
 import 'package:egattracking/Single.dart';
-import 'package:egattracking/dao/TowerDao.dart';
 import 'package:egattracking/service/Interceptor/EgatInterceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:egattracking/home_page.dart';
 import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
+import 'package:egattracking/dao/TowerDao.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -13,11 +13,12 @@ void main() {
 } 
 
 class MyApp extends StatelessWidget {
+  
   MyApp({Key? key}) : super(key: key);
   
   final appTitle = 'Drawer Demo';
   static Dio dio = Dio();
-  static late Data tower;
+  static Data? tower;
   static SingleFactory mfactory = SingleFactory();
 
   

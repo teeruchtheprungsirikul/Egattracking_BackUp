@@ -68,7 +68,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -364,7 +364,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                 List<Map> body = [];
                                 var towerNo = reportDao != null
                                     ? reportDao!.towerId
-                                    : MyApp.tower.id;
+                                    : MyApp.tower!.id;
                                 body.add({
                                   "key": "name",
                                   "type": "string",
@@ -392,16 +392,16 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
                                         ));
 
                                 var oj = ObjectRequestSendReport(
-                                    body, "24", towerNo, reportDao!);
+                                    body, "24", towerNo!, reportDao!);
 
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code! < 300) {
-                                    AttachmentService.createAttachment(
-                                            _file, response.reportId!)
-                                        .then((attacresponse) {
-                                      sendDone(context, response);
-                                    });
-                                  } else
+                                  // if (response.code! < 300) {
+                                  //   AttachmentService.createAttachment(
+                                  //           _file, response.reportId!)
+                                  //       .then((attacresponse) {
+                                  //     sendDone(context, response);
+                                  //   });
+                                  // } else
                                     sendDone(context, response);
                                 });
                               }
@@ -423,7 +423,7 @@ class MyCustomAddReportForm24State extends State<AddReportForm24> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao!.images[position];
+        var url = reportDao!.images![position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(

@@ -53,8 +53,8 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
           TextEditingController(text: initialText(topic[i]));
     }
     if (reportDao == null) {
-      mEditingController[0].text = MyApp.tower.name;
-      mEditingController[1].text = MyApp.tower.type;
+      mEditingController[0].text = MyApp.tower!.name;
+      mEditingController[1].text = MyApp.tower!.type;
     }
     formDifficultySection = FormDifficultySection(reportDao!);
     for (var i = 0; i < formDifficultySection.checkBoxValue.length; i++) {
@@ -73,7 +73,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -335,7 +335,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                                     List<Map> body = [];
                                     var towerNo = reportDao != null
                                         ? reportDao!.towerId
-                                        : MyApp.tower.id;
+                                        : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -356,7 +356,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                                     body.addAll(formDifficultySection
                                         .getValueForPost());
                                     var oj = ObjectRequestSendReport(
-                                        body, "2", towerNo, reportDao!);
+                                        body, "2", towerNo!, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,

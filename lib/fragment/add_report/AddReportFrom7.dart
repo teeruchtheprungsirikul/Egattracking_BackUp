@@ -52,7 +52,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
           TextEditingController(text: initialText(topic[i]));
     }
     if (reportDao == null) {
-      mEditingController[0].text = MyApp.tower.type;
+      mEditingController[0].text = MyApp.tower!.type;
     }
     super.initState();
   }
@@ -62,7 +62,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -359,7 +359,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                                     List<Map> body = [];
                                     var towerNo = reportDao != null
                                         ? reportDao!.towerId
-                                        : MyApp.tower.id;
+                                        : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -375,7 +375,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "7", towerNo, reportDao!);
+                                        body, "7", towerNo!, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,

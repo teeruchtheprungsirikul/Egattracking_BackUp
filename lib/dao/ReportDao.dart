@@ -1,12 +1,13 @@
 import 'package:egattracking/dao/ReportValueDao.dart';
+
 class ReportDao {
-  late DateTime createdOn;
-  late DateTime modifiedOn;
-  late String id;
-  late String towerId;
-  late String type;
-  late List<ReportValueDao> values;
-  late List<String> images;
+  DateTime? createdOn;
+  DateTime? modifiedOn;
+  String? id;
+  String? towerId;
+  String? type;
+  List<ReportValueDao>? values;
+  List<String>? images;
 
   ReportDao({required this.id, required this.towerId, required this.type});
 

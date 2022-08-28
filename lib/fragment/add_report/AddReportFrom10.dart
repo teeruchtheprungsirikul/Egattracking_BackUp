@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class AddReportForm10 extends StatefulWidget {
-  final reportDao;
+  final ReportDao? reportDao;
 
   AddReportForm10({Key? key, this.reportDao }) : super (key: key) ;
     
@@ -75,7 +75,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
           TextEditingController(text: initialText(topic[i]));
     }
     if (reportDao == null) {
-      mEditingController[0].text = MyApp.tower.name;
+      mEditingController[0].text = MyApp.tower!.name;
     } else {
       try {
         if (initialText("problem")!.isNotEmpty) {
@@ -92,7 +92,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -879,7 +879,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                 List<Map> body = [];
                                 var towerNo = reportDao != null
                                     ? reportDao!.towerId
-                                    : MyApp.tower.id;
+                                    : MyApp.tower!.id;
                                 body.add({
                                   "key": "problem",
                                   "type": "string",
@@ -946,15 +946,15 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                           ),
                                         ));
                                 var oj = ObjectRequestSendReport(
-                                    body, "10", towerNo, reportDao!);
+                                    body, "10", towerNo!, reportDao!);
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code! < 300) {
-                                    AttachmentService.createAttachment(
-                                            _file, response.reportId!)
-                                        .then((attacresponse) {
-                                      sendDone(context, response);
-                                    });
-                                  } else
+                                  // if (response.code! < 300) {
+                                  //   AttachmentService.createAttachment(
+                                  //           _file, response.reportId!)
+                                  //       .then((attacresponse) {
+                                  //     sendDone(context, response);
+                                  //   });
+                                  // } else
                                     sendDone(context, response);
                                 });
                               }
@@ -976,7 +976,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao!.images[position];
+        var url = reportDao!.images![position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(

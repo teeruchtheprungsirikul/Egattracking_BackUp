@@ -110,7 +110,7 @@ class MyCustomFormState extends State<ReportFragment> {
                 children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),

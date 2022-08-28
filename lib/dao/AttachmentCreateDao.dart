@@ -2,8 +2,7 @@ class AttachmentCreateDao {
   int code;
   String message;
   AttachmentData? data; 
-    //= AttachmentData(id: '', parentId: '', filename: '', extension: '', createdBy: '', createdOn: '', deleted: false, modifiedBy: '', modifiedOn: '', type: '', url: '');
-  
+    
 
   AttachmentCreateDao({required this.code, required this.message, required this.data});
 

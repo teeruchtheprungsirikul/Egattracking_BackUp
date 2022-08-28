@@ -23,8 +23,13 @@ class ReportService {
       "modified_by": userId,
       "values": data};
     var response = await MyApp.dio.post(Repository.report,
-        options: Options(headers: {
-          "Content-Type": "application/json",
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+          headers: {
+          "Content-Type": "application/json; charset=UTF-8",
           "Authorization":
           "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }),
@@ -43,8 +48,13 @@ class ReportService {
       "id": reportId,
       "values": data};
     var response = await MyApp.dio.put(Repository.putReport(reportId),
-        options: Options(headers: {
-          "Content-Type": "application/json",
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+          headers: {
+          "Content-Type": "application/json;charset=UTF-8 ",
           "Authorization":
           "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
         }),
@@ -76,8 +86,8 @@ class ReportService {
       var map = Map<String, List<String>>();
 
       for (var s in result) {
-          var images = await AttachmentService.getImageUrlFromId(s.id);
-          map[s.id] = images.map((t) => t.url).toList();
+          var images = await AttachmentService.getImageUrlFromId(s.id!);
+          map[s.id!] = images.map((t) => t.url).toList();
       }
       var result2 = result.map((tmp) {
           tmp.images = map[tmp.id]!;
@@ -85,7 +95,7 @@ class ReportService {
       }).toList();
 
       result2.sort((A, B) {
-        return A.modifiedOn.compareTo(B.modifiedOn);
+        return A.modifiedOn!.compareTo(B.modifiedOn!);
       });
       return result2.reversed.toList();
     }

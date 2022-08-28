@@ -56,7 +56,7 @@ class MyCustomAddReportForm20State extends BaseStatefulState<AddReportForm20> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -291,7 +291,7 @@ class MyCustomAddReportForm20State extends BaseStatefulState<AddReportForm20> {
                                     List<Map> body = [];
                                     var towerNo = reportDao != null
                                         ? reportDao!.towerId
-                                        : MyApp.tower.id;
+                                        : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -311,7 +311,7 @@ class MyCustomAddReportForm20State extends BaseStatefulState<AddReportForm20> {
                                     }
 
                                     var oj = ObjectRequestSendReport(
-                                        body, "20", towerNo, reportDao!);
+                                        body, "20", towerNo!, reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,

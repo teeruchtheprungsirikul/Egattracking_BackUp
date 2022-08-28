@@ -3,6 +3,7 @@ import 'package:egattracking/dao/ReportDao.dart';
 import 'package:flutter/material.dart';
 
 
+
 // ignore: must_be_immutable
 class FormDifficultySection extends StatelessWidget {
   ReportDao? reportDao;
@@ -293,7 +294,7 @@ class FormDifficultySection extends StatelessWidget {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }

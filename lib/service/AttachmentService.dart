@@ -1,8 +1,4 @@
-
-
-
-
-
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:egattracking/dao/AttachmentCreateDao.dart';
@@ -15,7 +11,7 @@ import 'UserService.dart';
 
 class AttachmentService {
   static Future<List<AttachmentCreateDao>> createAttachment(
-       var files, String reportId) async {
+      File? files, File? files2, String reportId) async {
     print("call attachment");
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -23,8 +19,9 @@ class AttachmentService {
       var userId = prefs.getString(UserService.keyuserid);
       List<AttachmentCreateDao> uploadImageResults = [];
       print("before for");
-      for ( var file in files) {
-        print("in for each with file = $file");
+      if (true) {
+        print("in for each with file = $files");
+        File? file = files;
         if (file != null) {
           String fileName = file.path.split('/').last;
           var multipart =
@@ -46,6 +43,33 @@ class AttachmentService {
           if (response.statusCode! < 300)
             uploadImageResults.add(AttachmentCreateDao.fromJson(response.data));
         }
+
+        if (true) {
+          print("in for each with file = $files");
+          File? file = files2;
+          if (file != null) {
+            String fileName = file.path.split('/').last;
+            var multipart =
+                await MultipartFile.fromFile(file.path, filename: fileName);
+            FormData formData = FormData.fromMap({
+              "file": await MultipartFile.fromFile(file.path,
+                  filename: fileName,
+                  contentType: multipart.contentType!.change(
+                      type: "image", subtype: fileName.split('.').last)),
+              "parentid": reportId,
+              "type": "report"
+            });
+            var response = await MyApp.dio.post(Repository.attachment,
+                data: formData,
+                options: Options(headers: {
+                  "Authorization":
+                      "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
+                }));
+            if (response.statusCode! < 300)
+              uploadImageResults
+                  .add(AttachmentCreateDao.fromJson(response.data));
+          }
+        }
       }
       return uploadImageResults;
     } catch (e) {
@@ -65,11 +89,11 @@ class AttachmentService {
             "Authorization":
                 "Bearer ${prefs.getString(UserService.keyaccesstoken)}"
           }));
-      if(response is String){
+      if (response is String) {
         return [];
-      }else{
+      } else {
         var mapList = response.data as List;
-        return mapList.map((tmp){
+        return mapList.map((tmp) {
           return AttachmentImageUrlDao.fromJson(tmp);
         }).toList();
       }

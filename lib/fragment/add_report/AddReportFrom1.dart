@@ -15,7 +15,7 @@ import 'SendReportUseCase.dart';
 class AddReportForm1 extends StatefulWidget {
   final ReportDao? reportDao;
   AddReportForm1({Key? key, this.reportDao}) : super(key: key);
-  // AddReportForm1({reportDao? reportDao});
+  // AddReportForm1({ReportDao? reportDao});
 
   @override
   MyCustomAddReportForm1State createState() {
@@ -36,7 +36,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
     //this.reportDao = reportDao;
     this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
-
+  
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
@@ -59,8 +59,8 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
           TextEditingController(text: initialText(topic[i]));
     }
     if (this.reportDao!.id == "") {
-      mEditingController[0].text = MyApp.tower.name;
-      mEditingController[1].text = MyApp.tower.type;
+      mEditingController[0].text = MyApp.tower!.name;
+      mEditingController[1].text = MyApp.tower!.type;
     }
     formDifficultySection = FormDifficultySection(this.reportDao!);
     for (var i = 0; i < formDifficultySection.checkBoxValue.length; i++) {
@@ -79,7 +79,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
       return "";
     else {
       try {
-        return this.reportDao!.values.firstWhere((it) => it.key == key).value;
+        return this.reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -337,9 +337,9 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = this.reportDao != null
+                                    var towerNo = this.reportDao!.towerId != ""
                                         ? this.reportDao!.towerId
-                                        : MyApp.tower.id;
+                                        : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
                                       "type": "string",
@@ -360,7 +360,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                                     body.addAll(formDifficultySection
                                         .getValueForPost());
                                     var oj = ObjectRequestSendReport(
-                                        body, "1", towerNo, this.reportDao!);
+                                        body, "1", towerNo!, this.reportDao!);
                                     showDialog(
                                         context: context,
                                         barrierDismissible: false,

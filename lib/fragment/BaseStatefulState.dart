@@ -16,7 +16,6 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   File? _selectedImageFile2;
   //List<File> file = []..length = 2;
   //List file = List.filled(2, 0);
-
   //late reportDao
   ReportDao? reportDao;
   String urgent = "ไม่เร่งด่วน";
@@ -82,18 +81,19 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   void sentAttechment(PostReportDao response) {
     if (response.code! < 300) {
       AttachmentService.createAttachment(
-              _selectedImageFile1, response.reportId!)
+              _selectedImageFile1, _selectedImageFile2 ,response.reportId!)
           .then((attacresponse) {
         sendDone(context, response);
       });
     }
-    if (response.code! < 300) {
-      AttachmentService.createAttachment(
-              _selectedImageFile2, response.reportId!)
-          .then((attacresponse) {
-        sendDone(context, response);
-      });
-    } else
+    // if (response.code! < 300) {
+    //   AttachmentService.createAttachment(
+    //           _selectedImageFile2, response.reportId!)
+    //       .then((attacresponse) {
+    //     sendDone(context, response);
+    //   });
+    // } 
+    else
       sendDone(context, response);
   }
 
@@ -129,7 +129,7 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   Widget prepareImage(_selectedImageFile, int position) {
     if (_selectedImageFile != null) {
       try {
-        var url = reportDao!.images[position];
+        var url = reportDao!.images![position];
         return Image.network(url);
       } catch (e) {
         return Image.file(

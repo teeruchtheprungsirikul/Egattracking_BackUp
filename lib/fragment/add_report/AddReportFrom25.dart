@@ -73,7 +73,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
           TextEditingController(text: initialText(topic[i]));
     }
     if (reportDao == null) {
-      mEditingController[0].text = MyApp.tower.name;
+      mEditingController[0].text = MyApp.tower!.name;
     } else {
       try {
         if (initialText("problem")!.isNotEmpty) {
@@ -90,7 +90,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
       return "";
     else {
       try {
-        return reportDao!.values.firstWhere((it) => it.key == key).value;
+        return reportDao!.values!.firstWhere((it) => it.key == key).value;
       } catch (error) {
         return "";
       }
@@ -881,7 +881,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                 List<Map> body = [];
                                 var towerNo = reportDao != null
                                     ? reportDao!.towerId
-                                    : MyApp.tower.id;
+                                    : MyApp.tower!.id;
                                 body.add({
                                   "key": "problem",
                                   "type": "string",
@@ -947,15 +947,15 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
                                           ),
                                         ));
                                 var oj = ObjectRequestSendReport(
-                                    body, "25", towerNo, reportDao!);
+                                    body, "25", towerNo!, reportDao!);
                                 SendReportUseCase.serReport(oj, (response) {
-                                  if (response.code! < 300) {
-                                    AttachmentService.createAttachment(
-                                            _file, response.reportId!)
-                                        .then((attacresponse) {
-                                      sendDone(context, response);
-                                    });
-                                  } else
+                                  // if (response.code! < 300) {
+                                  //   AttachmentService.createAttachment(
+                                  //           _file, response.reportId!)
+                                  //       .then((attacresponse) {
+                                  //     sendDone(context, response);
+                                  //   });
+                                  // } else
                                     sendDone(context, response);
                                 });
                               }
@@ -977,7 +977,7 @@ class MyCustomAddReportForm25State extends State<AddReportForm25> {
   Widget prepareImage(file, int position) {
     if (file == null) {
       try {
-        var url = reportDao!.images[position];
+        var url = reportDao!.images![position];
         return Image.network(url);
       } catch (e) {
         return Image.asset(

@@ -18,7 +18,7 @@ class PostReportDao {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    Map<String, dynamic> data = Map<String, dynamic>();
     data['code'] = this.code;
     data['message'] = this.message;
     data['data']['id'] = this.reportId;
