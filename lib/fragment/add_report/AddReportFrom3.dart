@@ -35,7 +35,7 @@ class MyCustomAddReportForm3State extends BaseStatefulState<AddReportForm3> {
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
   MyCustomAddReportForm3State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
 
   List<String> topic = Topic.report3;
@@ -46,16 +46,16 @@ class MyCustomAddReportForm3State extends BaseStatefulState<AddReportForm3> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled(topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower!.name;
       mEditingController[1].text = MyApp.tower!.type;
     }
-    formDifficultySection = FormDifficultySection(reportDao!);
+    formDifficultySection = FormDifficultySection(this.reportDao!);
     for (var i = 0; i < formDifficultySection.checkBoxValue.length; i++) {
       formDifficultySection.checkBoxValue[i] =
           initialText(Topic.warningBreak[i]) == "true";
@@ -302,7 +302,7 @@ class MyCustomAddReportForm3State extends BaseStatefulState<AddReportForm3> {
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -335,8 +335,8 @@ class MyCustomAddReportForm3State extends BaseStatefulState<AddReportForm3> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                    var towerNo = this.reportDao!.towerId != ""
+                                        ? this.reportDao!.towerId
                                         : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",

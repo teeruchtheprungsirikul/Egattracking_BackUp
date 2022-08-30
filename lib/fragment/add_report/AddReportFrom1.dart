@@ -282,7 +282,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                               child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -306,7 +306,7 @@ class MyCustomAddReportForm1State extends BaseStatefulState<AddReportForm1> {
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(

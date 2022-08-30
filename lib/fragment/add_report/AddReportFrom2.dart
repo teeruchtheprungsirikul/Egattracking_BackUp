@@ -32,14 +32,14 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm2State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
 
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
   final childPadding = const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0);
 
-  late List<String> topic = Topic.report2;
+  List<String> topic = Topic.report2;
   late List<TextEditingController> mEditingController;
   late FormDifficultySection formDifficultySection;
 
@@ -47,16 +47,16 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled(topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower!.name;
       mEditingController[1].text = MyApp.tower!.type;
     }
-    formDifficultySection = FormDifficultySection(reportDao!);
+    formDifficultySection = FormDifficultySection(this.reportDao!);
     for (var i = 0; i < formDifficultySection.checkBoxValue.length; i++) {
       formDifficultySection.checkBoxValue[i] =
           initialText(Topic.warningBreak[i]) == "true";
@@ -276,7 +276,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                               child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -300,7 +300,7 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -333,8 +333,8 @@ class MyCustomAddReportForm2State extends BaseStatefulState<AddReportForm2> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                    var towerNo = this.reportDao!.towerId != ""
+                                        ? this.reportDao!.towerId
                                         : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",

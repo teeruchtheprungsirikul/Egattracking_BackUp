@@ -11,7 +11,7 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm4 extends StatefulWidget {
-  final reportDao;
+ final ReportDao? reportDao;
 
   AddReportForm4({Key? key, this.reportDao}) : super(key: key);
 
@@ -30,7 +30,7 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm4State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
@@ -41,14 +41,14 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController =
-        List<int>.filled(topic.length + 1, 0).cast<TextEditingController>();
-    for (var i = 0; i < topic.length + 1; i++) {
+     mEditingController =
+        List.generate(topic.length+1, (i) => TextEditingController());
+    for (var i = 0; i < topic.length+1; i++) {
       mEditingController[i] = (i == topic.length)
           ? TextEditingController(text: "")
           : TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower!.name;
     }
     _problem = [];
@@ -278,7 +278,7 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
                               child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -335,8 +335,8 @@ class MyCustomAddReportForm4State extends BaseStatefulState<AddReportForm4> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                     var towerNo = this.reportDao!.towerId != ""
+                                        ? this.reportDao!.towerId
                                         : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",
