@@ -11,7 +11,7 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm8 extends StatefulWidget {
-  final reportDao;
+  final ReportDao? reportDao;
 
   AddReportForm8({Key? key, this.reportDao }) : super (key: key) ;
     
@@ -32,7 +32,7 @@ class MyCustomAddReportForm8State extends BaseStatefulState<AddReportForm8> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm8State({ReportDao? reportDao}) {
-    this.reportDao = reportDao;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
@@ -57,13 +57,12 @@ class MyCustomAddReportForm8State extends BaseStatefulState<AddReportForm8> {
   void initState() {
     _profile = UserService.getProfile();
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
     for (var i = 0; i < topic.length; i++) {
-      mEditingController[i] =
+       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[1].text = MyApp.tower!.type;
     }
     super.initState();
@@ -340,8 +339,8 @@ class MyCustomAddReportForm8State extends BaseStatefulState<AddReportForm8> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                    var towerNo = this.reportDao!.towerId != ""
+                                        ? this.reportDao!.towerId
                                         : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",

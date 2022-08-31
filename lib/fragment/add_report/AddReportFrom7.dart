@@ -11,7 +11,7 @@ import '../BaseStatefulState.dart';
 import 'SendReportUseCase.dart';
 
 class AddReportForm7 extends StatefulWidget {
-  final reportDao;
+  final ReportDao? reportDao;
 
   AddReportForm7({Key? key, this.reportDao}) : super (key: key); 
     
@@ -32,7 +32,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm7State({ReportDao? reportDao}) {
-    this.reportDao = reportDao!;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
   late Future<ProfileDao> _profile;
   final _formKey = GlobalKey<FormState>();
@@ -44,14 +44,13 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
   @override
   void initState() {
     _profile = UserService.getProfile();
-    mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+   mEditingController =
+        List.generate(topic.length, (i) => TextEditingController());
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower!.type;
     }
     super.initState();
@@ -300,7 +299,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                               child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -324,7 +323,7 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              //mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -357,8 +356,8 @@ class MyCustomAddReportForm7State extends BaseStatefulState<AddReportForm7> {
                                   // otherwise.
                                   if (_formKey.currentState!.validate()) {
                                     List<Map> body = [];
-                                    var towerNo = reportDao != null
-                                        ? reportDao!.towerId
+                                    var towerNo = this.reportDao!.towerId != ""
+                                        ? this.reportDao!.towerId
                                         : MyApp.tower!.id;
                                     body.add({
                                       "key": "name",

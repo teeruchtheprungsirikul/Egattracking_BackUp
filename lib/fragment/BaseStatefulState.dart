@@ -85,14 +85,7 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
           .then((attacresponse) {
         sendDone(context, response);
       });
-    }
-    // if (response.code! < 300) {
-    //   AttachmentService.createAttachment(
-    //           _selectedImageFile2, response.reportId!)
-    //       .then((attacresponse) {
-    //     sendDone(context, response);
-    //   });
-    // } 
+    } 
     else
       sendDone(context, response);
   }

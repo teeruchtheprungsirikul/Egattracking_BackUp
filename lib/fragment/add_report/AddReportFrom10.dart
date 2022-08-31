@@ -16,9 +16,7 @@ import 'package:intl/intl.dart';
 class AddReportForm10 extends StatefulWidget {
   final ReportDao? reportDao;
 
-  AddReportForm10({Key? key, this.reportDao }) : super (key: key) ;
-    
- 
+  AddReportForm10({Key? key, this.reportDao}) : super(key: key);
 
   @override
   MyCustomAddReportForm10State createState() {
@@ -29,14 +27,18 @@ class AddReportForm10 extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomAddReportForm10State extends State<AddReportForm10> {
-  late ReportDao? reportDao;
-  late DateTime _timeChoose;
-  late DateTime _dateChoose;
-  late DateTime _timeChoose2;
-  late DateTime _dateChoose2;
-  late List<File> _file;
-  late String dropdownTripValue;
-  late String dropdownFixedValue;
+  ReportDao? reportDao;
+  DateTime? _timeChoose;
+  DateTime? _dateChoose;
+  DateTime? _timeChoose2;
+  DateTime? _dateChoose2;
+  File? _selectedImageFile1;
+  File? _selectedImageFile2;
+  File? _selectedImageFile3;
+  File? _selectedImageFile4;
+  //List<File> _file;
+  String? dropdownTripValue;
+  String? dropdownFixedValue;
 
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
@@ -44,7 +46,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   MyCustomAddReportForm10State({ReportDao? reportDao}) {
-    this.reportDao = reportDao!;
+    this.reportDao = ReportDao(id: "", towerId: "", type: "");
   }
 
   late Future<ProfileDao> _profile;
@@ -63,18 +65,15 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
     _timeChoose2 = DateTime.now();
     _dateChoose2 = DateTime.now();
     _problem = [];
-    _file = List<int>.filled
- (4,0).cast<File>();
     dropdownTripValue = "เลือกทริป";
     dropdownFixedValue = "ดำเนินการทันที";
     mEditingController =
-        List<int>.filled
- (topic.length, 0).cast<TextEditingController>();
+        List.generate(topic.length, (i) => TextEditingController());
     for (var i = 0; i < topic.length; i++) {
       mEditingController[i] =
           TextEditingController(text: initialText(topic[i]));
     }
-    if (reportDao == null) {
+    if (reportDao!.id == "") {
       mEditingController[0].text = MyApp.tower!.name;
     } else {
       try {
@@ -273,13 +272,12 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                               TextStyle(color: Colors.black),
                                           side: BorderSide(
                                               color: Colors.grey,
-                                              width: 2.0
- ,
+                                              width: 2.0,
                                               style: BorderStyle.solid),
                                         ),
                                         child: Text(
                                           DateFormat("dd/MM/yyyy")
-                                              .format(_dateChoose),
+                                              .format(_dateChoose!),
                                         ),
                                       ),
                                     ),
@@ -301,8 +299,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                             });
                                           },
                                               showTitleActions: true,
-                                              locale: LocaleType.th
-                                              );
+                                              locale: LocaleType.th);
                                         },
                                         style: OutlinedButton.styleFrom(
                                           textStyle:
@@ -314,7 +311,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                         ),
                                         child: Text(
                                           DateFormat("HH:mm")
-                                              .format(_timeChoose),
+                                              .format(_timeChoose!),
                                         ),
                                       ),
                                     ),
@@ -562,7 +559,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                         ),
                                         child: Text(
                                           DateFormat("dd/MM/yyyy")
-                                              .format(_dateChoose2),
+                                              .format(_dateChoose2!),
                                         ),
                                       ),
                                     ),
@@ -596,7 +593,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                         ),
                                         child: Text(
                                           DateFormat("HH:mm")
-                                              .format(_timeChoose2),
+                                              .format(_timeChoose2!),
                                         ),
                                       ),
                                     ),
@@ -670,13 +667,14 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                       child: Material(
                                           child: InkWell(
                                         onTap: () {
-                                          getImage(0);
+                                          getImage1();
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            child: prepareImage(_file[0], 0),
+                                            child: prepareImage(
+                                                _selectedImageFile1, 0),
                                           ),
                                         ),
                                       ))),
@@ -685,13 +683,14 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                       child: Material(
                                           child: InkWell(
                                         onTap: () {
-                                          getImage(1);
+                                          getImage2();
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            child: prepareImage(_file[1], 1),
+                                            child: prepareImage(
+                                                _selectedImageFile2, 1),
                                           ),
                                         ),
                                       ))),
@@ -700,13 +699,14 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                       child: Material(
                                           child: InkWell(
                                         onTap: () {
-                                          getImage(2);
+                                          getImage3();
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            child: prepareImage(_file[2], 2),
+                                            child: prepareImage(
+                                                _selectedImageFile3, 2),
                                           ),
                                         ),
                                       ))),
@@ -715,13 +715,14 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                       child: Material(
                                           child: InkWell(
                                         onTap: () {
-                                          getImage(3);
+                                          getImage4();
                                         },
                                         child: Container(
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            child: prepareImage(_file[3], 3),
+                                            child: prepareImage(
+                                                _selectedImageFile4, 3),
                                           ),
                                         ),
                                       ))),
@@ -820,7 +821,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                           child: Container(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          //mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
@@ -844,7 +845,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                         width: double.infinity,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          //mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
@@ -877,8 +878,8 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                               // otherwise.
                               if (_formKey.currentState!.validate()) {
                                 List<Map> body = [];
-                                var towerNo = reportDao != null
-                                    ? reportDao!.towerId
+                                var towerNo = this.reportDao!.towerId != ""
+                                    ? this.reportDao!.towerId
                                     : MyApp.tower!.id;
                                 body.add({
                                   "key": "problem",
@@ -889,25 +890,25 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                   "key": "date_trip",
                                   "type": "string",
                                   "value": DateFormat("dd/MM/yyyy")
-                                      .format(_dateChoose2)
+                                      .format(_dateChoose2!)
                                 });
                                 body.add({
                                   "key": "time_trip",
                                   "type": "string",
                                   "value":
-                                      DateFormat("HH:mm").format(_dateChoose2)
+                                      DateFormat("HH:mm").format(_dateChoose2!)
                                 });
                                 body.add({
                                   "key": "date_report",
                                   "type": "string",
                                   "value": DateFormat("dd/MM/yyyy")
-                                      .format(_dateChoose)
+                                      .format(_dateChoose!)
                                 });
                                 body.add({
                                   "key": "time_report",
                                   "type": "string",
                                   "value":
-                                      DateFormat("HH:mm").format(_dateChoose)
+                                      DateFormat("HH:mm").format(_dateChoose!)
                                 });
                                 body.add({
                                   "key": "trip",
@@ -931,6 +932,8 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                     "value": mEditingController[i].text
                                   });
                                 }
+                                var oj = ObjectRequestSendReport(
+                                    body, "10", towerNo!, reportDao!);
                                 showDialog(
                                     context: context,
                                     barrierDismissible: false,
@@ -945,16 +948,18 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                             ),
                                           ),
                                         ));
-                                var oj = ObjectRequestSendReport(
-                                    body, "10", towerNo!, reportDao!);
                                 SendReportUseCase.serReport(oj, (response) {
-                                  // if (response.code! < 300) {
-                                  //   AttachmentService.createAttachment(
-                                  //           _file, response.reportId!)
-                                  //       .then((attacresponse) {
-                                  //     sendDone(context, response);
-                                  //   });
-                                  // } else
+                                  if (response.code! < 300) {
+                                    AttachmentService.createAttachment2(
+                                            _selectedImageFile1,
+                                            _selectedImageFile2,
+                                            _selectedImageFile3,
+                                            _selectedImageFile4,
+                                            response.reportId!)
+                                        .then((attacresponse) {
+                                      sendDone(context, response);
+                                    });
+                                  } else
                                     sendDone(context, response);
                                 });
                               }
@@ -973,28 +978,57 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  Widget prepareImage(file, int position) {
-    if (file == null) {
+  Widget prepareImage(_selectedImageFile, int position) {
+    if (_selectedImageFile != null) {
       try {
         var url = reportDao!.images![position];
         return Image.network(url);
       } catch (e) {
-        return Image.asset(
-          "assets/placeholder.png",
+        return Image.file(
+          _selectedImageFile!,
           fit: BoxFit.fitHeight,
         );
       }
     } else
-      return Image.file(
-        file,
+      return Image.asset(
+        "assets/placeholder.png",
         fit: BoxFit.fitHeight,
       );
   }
 
-  Future getImage(index) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  getImage1() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
     setState(() {
-      _file[index] = File(image!.path);
+      _selectedImageFile1 = File(selectedFile.path);
+    });
+  }
+
+  getImage2() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
+    setState(() {
+      _selectedImageFile2 = File(selectedFile.path);
+    });
+  }
+
+  getImage3() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
+    setState(() {
+      _selectedImageFile3 = File(selectedFile.path);
+    });
+  }
+
+  getImage4() async {
+    final selectedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(selectedFile!.path);
+    setState(() {
+      _selectedImageFile4 = File(selectedFile.path);
     });
   }
 }
