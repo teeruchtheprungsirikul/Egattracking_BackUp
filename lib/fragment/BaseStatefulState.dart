@@ -7,16 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
-  // List<File> file = factory as List<File>;
-  // filled(length, fill, {bool growable = false});
-  //List file = List.filled(2, 0);
-  //List<File> file = List.filled(2,0,).cast<File>();
-  //List<int> file = List<int>.filled(2, 0);
   File? _selectedImageFile1;
   File? _selectedImageFile2;
-  //List<File> file = []..length = 2;
-  //List file = List.filled(2, 0);
-  //late reportDao
   ReportDao? reportDao;
   String urgent = "ไม่เร่งด่วน";
 
@@ -61,8 +53,8 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   }
 
   getImage1() async {
-    final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final selectedFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile1 = File(selectedFile.path);
@@ -71,7 +63,8 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
 
   getImage2() async {
     final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker()
+        .pickImage(source: ImageSource.gallery,imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile2 = File(selectedFile.path);
@@ -81,12 +74,11 @@ abstract class BaseStatefulState<T extends StatefulWidget> extends State<T> {
   void sentAttechment(PostReportDao response) {
     if (response.code! < 300) {
       AttachmentService.createAttachment(
-              _selectedImageFile1, _selectedImageFile2 ,response.reportId!)
+              _selectedImageFile1, _selectedImageFile2, response.reportId!)
           .then((attacresponse) {
         sendDone(context, response);
       });
-    } 
-    else
+    } else
       sendDone(context, response);
   }
 

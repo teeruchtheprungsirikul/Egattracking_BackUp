@@ -31,40 +31,40 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:core';
 
 class HistoryFragment extends StatefulWidget {
-
-  HistoryFragment({Key? key}):super(key: key);
+  HistoryFragment({Key? key}) : super(key: key);
 
   @override
   _HistoryFragmentState createState() => _HistoryFragmentState();
 }
 
-class _HistoryFragmentState extends State<HistoryFragment>  {
+class _HistoryFragmentState extends State<HistoryFragment> {
   @override
   void initState() {
     _reports = ReportService.getReport();
     super.initState();
   }
 
-  String getOrDefault(ReportDao reports,String  key){
+  String getOrDefault(ReportDao reports, String key) {
     String a;
-    try{
+    try {
       a = reports.values!.firstWhere((it) => it.key == key).value!;
-    }catch( exception ){
+    } catch (exception) {
       a = "empty";
     }
     return a;
   }
 
-  String getWire(ReportDao reports,int index){
+  String getWire(ReportDao reports, int index) {
     String a;
-    try{
+    try {
       a = reports.values!.firstWhere((it) => it.key == "wire_detail").value!;
       a = a.split(":")[index];
       return a;
-    }catch(e){
+    } catch (e) {
       return "";
     }
   }
+
   late Future<List<ReportDao>> _reports;
 
   Widget renderReports(List<ReportDao> reports) {
@@ -87,17 +87,11 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                       ListTile(
                         leading: InkWell(
                           child: ImageIcon(AssetImage("line.png")),
-                          onTap: (){
-                              // launchUrl(
-                              // Uri.parse("https://line.me/R/")
-                              // {LaunchMode mode = LaunchMode.platformDefault,
-                              // WebViewConfiguration webViewConfiguration = const WebViewConfiguration(),
-                              // String? webOnlyWindowName}
-                              // );
-                              launchUrl(Uri.parse("https://line.me/R/"),
+                          onTap: () {
+                            launchUrl(
+                              Uri.parse("https://line.me/R/"),
                               mode: LaunchMode.platformDefault,
-                  
-                              );
+                            );
                           },
                         ),
                         title: RichText(
@@ -130,8 +124,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                               ),
                               Row(
                                 children: <Widget>[
-                                  Text(
-                                      'เลขสาย : ${getWire(reports[index], 1)}',
+                                  Text('เลขสาย : ${getWire(reports[index], 1)}',
                                       style: TextStyle(height: 2.0)),
                                 ],
                               ),
@@ -171,9 +164,7 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
                                 ],
                               ),
                             ]),
-                        onTap: () => {
-                          editReport(reports[index],context)
-                      },
+                        onTap: () => {editReport(reports[index], context)},
                       ),
                     ],
                   ),
@@ -186,62 +177,171 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
     );
   }
 
-  void editReport(ReportDao reportDao,BuildContext context){
+  void editReport(ReportDao reportDao, BuildContext context) {
     int type = int.parse("${reportDao.type}");
-    switch(type){
-      case 1 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm1(reportDao: reportDao)));
-      break;
-      case 2 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm2(reportDao: reportDao)));
-      break;
-      case 3 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm3(reportDao: reportDao)));
-      break;
-      case 4 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm4(reportDao: reportDao)));
-      break;
-      case 5 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm5(reportDao: reportDao)));
-      break;
-      case 6 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm6(reportDao: reportDao)));
-      break;
-      case 7 : Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm7(reportDao: reportDao)));
-      break;
-      case 8 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm8(reportDao: reportDao)));
-      break;
-      case 9 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm9(reportDao: reportDao)));
-      break;
-      case 10 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm10(reportDao: reportDao)));
-      break;
-      case 11 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm11(reportDao: reportDao)));
-      break;
-      case 12 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm12(reportDao: reportDao)));
-      break;
-      case 13 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm13(reportDao: reportDao)));
-      break;
-      case 14 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm14(reportDao: reportDao)));
-      break;
-      case 15 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm15(reportDao: reportDao)));
-      break;
-      case 16:  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm16(reportDao: reportDao)));
-      break;
-      case 17 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm17(reportDao: reportDao)));
-      break;
-      case 18 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm18(reportDao: reportDao)));
-      break;
-      case 19 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm19(reportDao: reportDao)));
-      break;
-      case 20 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm20(reportDao: reportDao)));
-      break;
-      case 21 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm21(reportDao: reportDao)));
-      break;
-      case 22 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm22(reportDao: reportDao)));
-      break;
-      case 23 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm23(reportDao: reportDao)));
-      break;
-      case 24 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm24(reportDao: reportDao)));
-      break;
-      case 25 :  Navigator.push(context, MaterialPageRoute(builder: (mContext) => AddReportForm25(reportDao: reportDao)));
-      break;
+    switch (type) {
+      case 1:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm1(reportDao: reportDao)));
+        break;
+      case 2:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm2(reportDao: reportDao)));
+        break;
+      case 3:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm3(reportDao: reportDao)));
+        break;
+      case 4:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm4(reportDao: reportDao)));
+        break;
+      case 5:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm5(reportDao: reportDao)));
+        break;
+      case 6:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm6(reportDao: reportDao)));
+        break;
+      case 7:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm7(reportDao: reportDao)));
+        break;
+      case 8:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm8(reportDao: reportDao)));
+        break;
+      case 9:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm9(reportDao: reportDao)));
+        break;
+      case 10:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm10(reportDao: reportDao)));
+        break;
+      case 11:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm11(reportDao: reportDao)));
+        break;
+      case 12:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm12(reportDao: reportDao)));
+        break;
+      case 13:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm13(reportDao: reportDao)));
+        break;
+      case 14:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm14(reportDao: reportDao)));
+        break;
+      case 15:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm15(reportDao: reportDao)));
+        break;
+      case 16:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm16(reportDao: reportDao)));
+        break;
+      case 17:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm17(reportDao: reportDao)));
+        break;
+      case 18:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm18(reportDao: reportDao)));
+        break;
+      case 19:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm19(reportDao: reportDao)));
+        break;
+      case 20:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm20(reportDao: reportDao)));
+        break;
+      case 21:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm21(reportDao: reportDao)));
+        break;
+      case 22:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm22(reportDao: reportDao)));
+        break;
+      case 23:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm23(reportDao: reportDao)));
+        break;
+      case 24:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm24(reportDao: reportDao)));
+        break;
+      case 25:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (mContext) => AddReportForm25(reportDao: reportDao)));
+        break;
     }
   }
-  List<String> yearDropDownValues = <String>['2022','2021','2020','2019', '2018', '2017', '2016'];
+
+  List<String> yearDropDownValues = <String>[
+    '2022',
+    '2021',
+    '2020',
+    '2019',
+    '2018',
+    '2017',
+    '2016'
+  ];
   List<String> monthDropDownValues = <String>[
     'Jan',
     'Feb',
@@ -299,5 +399,4 @@ class _HistoryFragmentState extends State<HistoryFragment>  {
       ),
     );
   }
-
 }
