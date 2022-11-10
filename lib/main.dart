@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   static Dio dio = Dio();
   static Data? tower;
   static SingleFactory mfactory = SingleFactory();
-
+  
   
 
   @override

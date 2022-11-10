@@ -625,7 +625,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
                                 ),
                                 validator: (val) {
                                   if (val!.length == 0)
-                                    return "โปรดกรอกข้อความ";
+                                    return "โปรดกรอกข้อความ ";
                                   else
                                     return null;
                                 },
@@ -998,7 +998,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
 
   getImage1() async {
     final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile1 = File(selectedFile.path);
@@ -1007,7 +1007,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
 
   getImage2() async {
     final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile2 = File(selectedFile.path);
@@ -1016,7 +1016,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
 
   getImage3() async {
     final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile3 = File(selectedFile.path);
@@ -1025,7 +1025,7 @@ class MyCustomAddReportForm10State extends State<AddReportForm10> {
 
   getImage4() async {
     final selectedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 25);
     print(selectedFile!.path);
     setState(() {
       _selectedImageFile4 = File(selectedFile.path);

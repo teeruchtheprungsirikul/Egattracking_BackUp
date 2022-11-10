@@ -24,7 +24,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   File? _image;
 
   Future getImage() async {
-    var image =
+    final image =
         await ImagePicker().pickImage(source: ImageSource.gallery);
   
   setState(() {
